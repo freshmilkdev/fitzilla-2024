@@ -36,6 +36,16 @@ export default {
           DEFAULT: 'hsl(var(--popover))',
           foreground: 'hsl(var(--popover-foreground))'
         },
+        // primary: {
+        //   DEFAULT: '#3b82f6', // Blue-500
+        //   light: '#60a5fa',  // Blue-400
+        //   dark: '#2563eb',   // Blue-600
+        // },
+        // secondary: {
+        //   DEFAULT: '#10b981', // Green-500
+        //   light: '#34d399',  // Green-400
+        //   dark: '#059669',   // Green-600
+        // },
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))'
