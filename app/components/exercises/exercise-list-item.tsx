@@ -1,28 +1,52 @@
-import {AccordionContent, AccordionItem, AccordionTrigger} from "~/components/ui/accordion";
-import type {Exercise} from "~/types";
+"use client"
+
+import * as React from "react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "~/components/ui/dropdown-menu"
 import {Separator} from "@radix-ui/react-separator";
+import type {Exercise} from "~/types";
+import {Trash2, Edit, EllipsisVerticalIcon, History} from "lucide-react";
+import {Button} from "~/components/ui/button";
 
 
-interface IExerciseListItem {
-  muscleGroup: string;
-  exercises: Exercise[]
-}
+export function ExerciseListItem({name, id}: Exercise) {
 
-export default function ExerciseListItem({muscleGroup, exercises}: IExerciseListItem) {
+
   return (
-    <AccordionItem value="item-1" className={'px-4'}>
-      <AccordionTrigger>{muscleGroup}</AccordionTrigger>
-      <AccordionContent>
-        <ul>
-          {
-            exercises.map(({id, name}: Exercise) => <li key={`exercise${id}`}>
-              <p>
-                <span>{name}</span>
-              </p>
-              <Separator orientation="vertical" />
-            </li>)
-          }
-        </ul>
-      </AccordionContent>
-    </AccordionItem>)
+    <li>
+      <div className='flex justify-between w-full'>
+        <span className='text-base'>{name}</span>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button variant='ghost'>
+              <EllipsisVerticalIcon/>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem>
+              <History/>
+              <span>History</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator/>
+            <DropdownMenuItem>
+              <Edit/>
+              <span>Edit</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator/>
+            <DropdownMenuItem>
+              <Trash2/>
+              <span>Delete</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <Separator orientation="vertical"/>
+    </li>
+
+  )
 }

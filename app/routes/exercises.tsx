@@ -1,5 +1,5 @@
-import type {Route} from "./+types/about";
-import {ExerciseList} from "~/components/exercises/exercise-list";
+import type {Route} from "./+types/exercises";
+import {MuscleGroupList} from "~/components/exercises/muscle-group-list";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -9,5 +9,5 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Exercises() {
-  return <ExerciseList/>;
+  return <MuscleGroupList/>;
 }
