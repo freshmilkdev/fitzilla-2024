@@ -12,6 +12,16 @@ import {
   SheetTrigger,
 } from "~/components/ui/sheet"
 import {Plus} from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue
+} from "~/components/ui/select";
+import {Switch} from "~/components/ui/switch";
 
 export function ExerciseForm() {
   return (
@@ -28,18 +38,35 @@ export function ExerciseForm() {
             Make changes to the exercise.
           </SheetDescription>
         </SheetHeader>
+
         <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
+          <div>
+            <Label htmlFor="exercise">
+              Exercise
             </Label>
-            <Input id="name" className="col-span-3"/>
+            <Input id="exercise"/>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input id="username" value="~peduarte" className="col-span-3"/>
+          <div>
+            <Label htmlFor="muscle-group">Muscle group</Label>
+            <Select>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a fruit"/>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Fruits</SelectLabel>
+                  <SelectItem value="apple">Apple</SelectItem>
+                  <SelectItem value="banana">Banana</SelectItem>
+                  <SelectItem value="blueberry">Blueberry</SelectItem>
+                  <SelectItem value="grapes">Grapes</SelectItem>
+                  <SelectItem value="pineapple">Pineapple</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="">
+            <Label htmlFor="bodyweight">Bodyweight</Label>
+            <Switch id="bodyweight" className='block'/>
           </div>
         </div>
         <SheetFooter>
