@@ -6,7 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "~/components/ui/dropdown-menu"
-import {Separator} from "@radix-ui/react-separator";
+
 import type {Exercise} from "~/types";
 import {Edit, Ellipsis, History, Trash2} from "lucide-react";
 import {Button} from "~/components/ui/button";
@@ -60,7 +60,7 @@ export function ExerciseListItem({name, id, hasCheckbox}: Exercise & { hasCheckb
           <ExerciseForm/>
         </Sheet>
       </div>
-      <Separator orientation="vertical"/>
+      {/*<Separator orientation='horizontal' />*/}
     </li>
 
   )

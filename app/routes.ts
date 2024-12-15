@@ -3,6 +3,7 @@ import {index, layout, route, type RouteConfig} from "@react-router/dev/routes";
 export const routePaths = {
   home: '/',
   exercises: '/exercises',
+  exercise: '/exercises/:id',
   programs: '/programs',
   history: 'history',
   workout: '/workout'
@@ -13,6 +14,7 @@ export default [
     index("routes/home.tsx"),
     route(routePaths.exercises, "./routes/exercises.tsx"),
     route(routePaths.workout, "./routes/workout.tsx"),
+    // route(routePaths.exercise, "./team.tsx"),
   ]),
 
 ] satisfies RouteConfig;
