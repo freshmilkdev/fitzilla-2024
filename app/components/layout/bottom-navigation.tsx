@@ -30,12 +30,12 @@ const navigation: NavItem[] = [{
 export function BottomNavigation() {
   return (
     <nav
-      className="w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600">
+      className="w-full h-16 bg-background border-t border-gray-200 dark:border-gray-600">
       <ul className="grid h-full max-w-lg grid-cols-4 mx-auto ">
         {navigation.map(({icon, link}, ix) =>
           <li key={`nav-item-${ix}`}>
             <NavLink to={link} className={({isActive}) =>
-              cn('w-full h-full flex items-center justify-center', isActive ? "bg-neutral-100" : "")
+              cn('w-full h-full flex items-center justify-center text-foreground', isActive ? "bg-neutral-100 dark:bg-neutral-900" : "")
             }>
               {icon}
             </NavLink>
