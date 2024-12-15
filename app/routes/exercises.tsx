@@ -1,5 +1,5 @@
 import type {Route} from "./+types/exercises";
-import Exercises from "~/components/exercises/Exercises";
+import Exercises from "~/components/exercises/exercises";
 
 export function meta({}: Route.MetaArgs) {
   return [
