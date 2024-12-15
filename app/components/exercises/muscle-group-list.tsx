@@ -5,7 +5,11 @@ import MuscleGroupListItem from "~/components/exercises/muscle-group-list-item";
 const muscleGroups: MuscleGroup[] = [
   {
     name: "Back", exercises: [
-      {id: '1', name: 'Pull Up'}
+      {id: '1', name: 'Pull Up'},
+      {id: '2', name: 'Lat Pulldown'},
+      {id: '3', name: 'Seated Row'},
+      {id: '4', name: 'Bent Over Row'},
+      {id: '5', name: 'Deadlift'},
     ]
   }
 ]

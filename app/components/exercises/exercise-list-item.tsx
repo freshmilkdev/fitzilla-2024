@@ -10,7 +10,7 @@ import {
 } from "~/components/ui/dropdown-menu"
 import {Separator} from "@radix-ui/react-separator";
 import type {Exercise} from "~/types";
-import {Edit, EllipsisVerticalIcon, History, Trash2} from "lucide-react";
+import {Edit, Ellipsis, History, Trash2} from "lucide-react";
 import {Button} from "~/components/ui/button";
 
 import {Checkbox} from "~/components/ui/checkbox"
@@ -34,7 +34,7 @@ export function ExerciseListItem({name, id, hasCheckbox}: Exercise & { hasCheckb
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant='ghost'>
-              <EllipsisVerticalIcon/>
+              <Ellipsis/>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
