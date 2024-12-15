@@ -12,6 +12,8 @@ import {Edit, Ellipsis, History, Trash2} from "lucide-react";
 import {Button} from "~/components/ui/button";
 
 import {Checkbox} from "~/components/ui/checkbox"
+import {ExerciseForm} from "~/components/exercises/exercise-form";
+import {Sheet, SheetTrigger} from "~/components/ui/sheet";
 
 
 export function ExerciseListItem({name, id, hasCheckbox}: Exercise & { hasCheckbox?: boolean; }) {
@@ -29,29 +31,34 @@ export function ExerciseListItem({name, id, hasCheckbox}: Exercise & { hasCheckb
             </label>
           </div> :
           <span>{name}</span>}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant='ghost'>
-              <Ellipsis/>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>
-              <History/>
-              <span>History</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator/>
-            <DropdownMenuItem>
-              <Edit/>
-              <span>Edit</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator/>
-            <DropdownMenuItem>
-              <Trash2/>
-              <span>Delete</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Sheet>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant='ghost'>
+                <Ellipsis/>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>
+                <History/>
+                <span>History</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator/>
+              <SheetTrigger asChild>
+                <DropdownMenuItem>
+                  <Edit/>
+                  <span>Edit</span>
+                </DropdownMenuItem>
+              </SheetTrigger>
+              <DropdownMenuSeparator/>
+              <DropdownMenuItem>
+                <Trash2/>
+                <span>Delete</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <ExerciseForm/>
+        </Sheet>
       </div>
       <Separator orientation="vertical"/>
     </li>
