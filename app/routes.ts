@@ -14,7 +14,7 @@ export default [
     index("routes/home.tsx"),
     route(routePaths.exercises, "./routes/exercises.tsx"),
     route(routePaths.workout, "./routes/workout.tsx"),
-    // route(routePaths.exercise, "./team.tsx"),
+    route(routePaths.exercise, "./routes/exercise.tsx"),
   ]),
 
 ] satisfies RouteConfig;
