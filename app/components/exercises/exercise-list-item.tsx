@@ -34,7 +34,7 @@ export function ExerciseListItem({name, id, hasCheckbox}: Exercise & { hasCheckb
         <Sheet>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant='ghost'>
+              <Button variant='ghost' size='icon'>
                 <Ellipsis/>
               </Button>
             </DropdownMenuTrigger>
