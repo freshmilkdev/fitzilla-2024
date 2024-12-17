@@ -11,6 +11,7 @@ export interface Exercise {
   id: number;
   name: string;
   muscleGroupId: number;
+  isBodyweight: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

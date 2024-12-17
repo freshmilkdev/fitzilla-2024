@@ -25,7 +25,7 @@ interface ExerciseFormProps {
 export function ExerciseForm({ exercise, onClose }: ExerciseFormProps) {
   const [name, setName] = useState(exercise?.name ?? "");
   const [muscleGroupId, setMuscleGroupId] = useState<number | undefined>(exercise?.muscleGroupId);
-  const [isBodyweight, setIsBodyweight] = useState(false);
+  const [isBodyweight, setIsBodyweight] = useState(exercise?.isBodyweight ?? false);
 
   // Reset form when exercise prop changes
   useEffect(() => {
@@ -54,6 +54,7 @@ export function ExerciseForm({ exercise, onClose }: ExerciseFormProps) {
         await db.exercises.add({
           name,
           muscleGroupId,
+          isBodyweight,
           createdAt: new Date(),
           updatedAt: new Date()
         });

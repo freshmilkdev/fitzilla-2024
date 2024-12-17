@@ -14,7 +14,8 @@ import { Checkbox } from "~/components/ui/checkbox"
 import { ExerciseForm } from "~/components/exercises/exercise-form";
 import { Sheet, SheetTrigger } from "~/components/ui/sheet";
 
-export function ExerciseListItem({ name, id, muscleGroupId, createdAt, updatedAt }: Exercise) {
+export function ExerciseListItem(exercise: Exercise) {
+  const { id, name } = exercise;
   return (
     <li>
       <div className='flex justify-between'>
@@ -53,7 +54,7 @@ export function ExerciseListItem({ name, id, muscleGroupId, createdAt, updatedAt
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <ExerciseForm/>
+          <ExerciseForm exercise={exercise}/>
         </Sheet>
       </div>
     </li>
