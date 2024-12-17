@@ -99,7 +99,6 @@ export function ExerciseForm({ exercise, onClose }: ExerciseFormProps) {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Muscle Groups</SelectLabel>
                 {muscleGroups?.map((group) => (
                   <SelectItem key={group.id} value={group.id.toString()}>
                     {group.name}
