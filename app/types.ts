@@ -1,8 +1,41 @@
-export interface Exercise {
-  id: string;
-  name: string;
-}
+// Base types that match database structure
 export interface MuscleGroup {
+  id: number;
   name: string;
-  exercises: Exercise[]
+  description?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Exercise {
+  id: number;
+  name: string;
+  muscleGroupId: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Extended types for UI with relationships
+export interface MuscleGroupWithExercises extends MuscleGroup {
+  exercises: Exercise[];
+}
+
+// Form types
+export interface CreateExerciseForm {
+  name: string;
+  muscleGroupId: number;
+}
+
+export interface CreateMuscleGroupForm {
+  name: string;
+  description?: string;
+}
+
+// API response types
+export interface ExerciseResponse extends Exercise {
+  muscleGroup: MuscleGroup;
+}
+
+export interface MuscleGroupResponse extends MuscleGroup {
+  exerciseCount: number;
 }

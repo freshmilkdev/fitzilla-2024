@@ -7,30 +7,26 @@ import {
   DropdownMenuTrigger
 } from "~/components/ui/dropdown-menu"
 
-import type {Exercise} from "~/types";
-import {Edit, Ellipsis, History, Trash2} from "lucide-react";
-import {Button} from "~/components/ui/button";
+import type { Exercise } from "~/types";
+import { Edit, Ellipsis, History, Trash2 } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox"
+import { ExerciseForm } from "~/components/exercises/exercise-form";
+import { Sheet, SheetTrigger } from "~/components/ui/sheet";
 
-import {Checkbox} from "~/components/ui/checkbox"
-import {ExerciseForm} from "~/components/exercises/exercise-form";
-import {Sheet, SheetTrigger} from "~/components/ui/sheet";
-
-
-export function ExerciseListItem({name, id, hasCheckbox}: Exercise & { hasCheckbox?: boolean; }) {
+export function ExerciseListItem({ name, id, muscleGroupId, createdAt, updatedAt }: Exercise) {
   return (
     <li>
       <div className='flex justify-between'>
-        {!hasCheckbox ?
-          <div className="flex items-center space-x-2 grow">
-            <Checkbox id={id}/>
-            <label
-              htmlFor={id}
-              className="text-base h-full w-full flex items-center cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              {name}
-            </label>
-          </div> :
-          <span>{name}</span>}
+        <div className="flex items-center space-x-2 grow">
+          <Checkbox id={id.toString()}/>
+          <label
+            htmlFor={id.toString()}
+            className="text-base h-full w-full flex items-center cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            {name}
+          </label>
+        </div>
         <Sheet>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -60,8 +56,6 @@ export function ExerciseListItem({name, id, hasCheckbox}: Exercise & { hasCheckb
           <ExerciseForm/>
         </Sheet>
       </div>
-      {/*<Separator orientation='horizontal' />*/}
     </li>
-
   )
 }
