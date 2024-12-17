@@ -4,12 +4,14 @@ import { Sheet, SheetTrigger } from "~/components/ui/sheet";
 import { Button } from "~/components/ui/button";
 import { Plus } from "lucide-react";
 import { ExerciseSheetProvider, useExerciseSheet } from "./exercise-sheet-context";
+import { PageHeader } from "../layout/page-header";
 
 function ExercisesContent() {
   const { isOpen, setIsOpen, setExercise } = useExerciseSheet();
 
   return (
-    <div className="container py-8">
+    <div className="container py-4">
+      <PageHeader title="Exercises" />
       <MuscleGroupList />
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>

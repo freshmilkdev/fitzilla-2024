@@ -17,6 +17,24 @@ export interface Exercise {
   updatedAt: Date;
 }
 
+
+export interface Program {
+  id: number;
+  name: string;
+  description?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ProgramExercise {
+  id: number;
+  programId: number;
+  exerciseId: number;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 // Extended types for UI with relationships
 export interface MuscleGroupWithExercises extends MuscleGroup {
   exercises: Exercise[];
@@ -40,4 +58,10 @@ export interface ExerciseResponse extends Exercise {
 
 export interface MuscleGroupResponse extends MuscleGroup {
   exerciseCount: number;
+}
+
+
+// Extended type for UI
+export interface ProgramWithExercises extends Program {
+  exercises: Exercise[];
 }

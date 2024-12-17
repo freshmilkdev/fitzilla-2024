@@ -5,6 +5,7 @@ export const routePaths = {
   exercises: '/exercises',
   exercise: '/exercises/:id',
   programs: '/programs',
+  program: '/programs/:id',
   history: 'history',
   workout: '/workout'
 }
@@ -15,6 +16,8 @@ export default [
     route(routePaths.exercises, "./routes/exercises.tsx"),
     route(routePaths.workout, "./routes/workout.tsx"),
     route(routePaths.exercise, "./routes/exercise.tsx"),
+    route(routePaths.programs, "./routes/programs.tsx"),
+    route(routePaths.program, "./routes/program.tsx"),
   ]),
 
 ] satisfies RouteConfig;

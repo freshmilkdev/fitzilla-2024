@@ -6,12 +6,54 @@ import {Badge} from "~/components/ui/badge";
 import {routePaths} from "~/routes";
 
 const exercises: Exercise[] = [
-  {id: '1', name: 'Pull Up'},
-  {id: '2', name: 'Lat Pulldown'},
-  {id: '3', name: 'Seated Row'},
-  {id: '4', name: 'Bent Over Row'},
-  {id: '5', name: 'Deadlift'},
-  {id: '6', name: 'Squat'},
+  {
+    id: 1, 
+    name: 'Pull Up',
+    muscleGroupId: 1,
+    isBodyweight: true,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    id: 2, 
+    name: 'Lat Pulldown',
+    muscleGroupId: 1,
+    isBodyweight: true,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    id: 3, 
+    name: 'Seated Row',
+    muscleGroupId: 1,
+    isBodyweight: true,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    id: 4, 
+    name: 'Bent Over Row',
+    muscleGroupId: 1,
+    isBodyweight: true,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    id: 5, 
+    name: 'Deadlift',
+    muscleGroupId: 1,
+    isBodyweight: true,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    id: 6, 
+    name: 'Squat',
+    muscleGroupId: 1,
+    isBodyweight: true,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
 ]
 export default function WorkoutExerciseList() {
   return (

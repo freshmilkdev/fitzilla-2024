@@ -1,15 +1,19 @@
 import Dexie, { type EntityTable } from 'dexie';
-import type { MuscleGroup, Exercise } from '~/types';
+import type { MuscleGroup, Exercise, ProgramExercise, Program } from '~/types';
 
 const db = new Dexie('WorkoutDatabase') as Dexie & {
   muscleGroups: EntityTable<MuscleGroup, 'id'>;
   exercises: EntityTable<Exercise, 'id'>;
+  programs: EntityTable<Program, 'id'>;
+  programExercises: EntityTable<ProgramExercise, 'id'>;
 };
 
 // Schema declaration
 db.version(1).stores({
   muscleGroups: '++id, name, createdAt, updatedAt',
-  exercises: '++id, name, muscleGroupId, createdAt, updatedAt'
+  exercises: '++id, name, muscleGroupId, createdAt, updatedAt',
+  programs: '++id, name, createdAt, updatedAt',
+  programExercises: '++id, programId, exerciseId, order, createdAt, updatedAt'
 });
 
 // Initialize database with seed data
@@ -120,13 +124,54 @@ const initializeDatabase = async () => {
         updatedAt: new Date(),
       },
     ];
-
+    
     console.log("Seeding exercises...");
     await db.exercises.bulkAdd(exercises);
+
+    const programs = [
+      {
+        name: "Full Body Workout",
+        description: "A complete full body workout program",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+    ];
+
+    console.log("Seeding programs...");
+    const programIds = await db.programs.bulkAdd(programs, { allKeys: true });
+
+    const programExercises = [
+      {
+        programId: programIds[0],
+        exerciseId: 1, // Bench Press
+        order: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        programId: programIds[0],
+        exerciseId: 4, // Squats
+        order: 2,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        programId: programIds[0],
+        exerciseId: 5, // Deadlifts
+        order: 3,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+    ];
+
+    console.log("Seeding program exercises...");
+    await db.programExercises.bulkAdd(programExercises);
     
     const finalCounts = await Promise.all([
       db.muscleGroups.count(),
-      db.exercises.count()
+      db.exercises.count(),
+      db.programs.count(),
+      db.programExercises.count()
     ]);
     console.log(`Final counts - Muscle Groups: ${finalCounts[0]}, Exercises: ${finalCounts[1]}`);
     
