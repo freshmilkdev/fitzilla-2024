@@ -3,21 +3,33 @@ import { ExerciseForm } from "~/components/exercises/exercise-form";
 import { Sheet, SheetTrigger } from "~/components/ui/sheet";
 import { Button } from "~/components/ui/button";
 import { Plus } from "lucide-react";
+import { ExerciseSheetProvider, useExerciseSheet } from "./exercise-sheet-context";
 
-export default function Exercises() {
-
+function ExercisesContent() {
+  const { isOpen, setIsOpen, setExercise } = useExerciseSheet();
 
   return (
     <div className="container py-8">
       <MuscleGroupList />
-      <Sheet>
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
-          <Button className={'fixed mx-auto left-1/2 transform -translate-x-1/2 bottom-20 rounded-full h-14 w-14'}>
+          <Button 
+            className={'fixed mx-auto left-1/2 transform -translate-x-1/2 bottom-20 rounded-full h-14 w-14'}
+            onClick={() => setExercise(null)}
+          >
             <Plus className={'!w-8 !h-8'} />
           </Button>
         </SheetTrigger>
         <ExerciseForm />
       </Sheet>
     </div>
+  )
+}
+
+export default function Exercises() {
+  return (
+    <ExerciseSheetProvider>
+      <ExercisesContent />
+    </ExerciseSheetProvider>
   )
 }

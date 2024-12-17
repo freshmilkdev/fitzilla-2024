@@ -11,11 +11,17 @@ import type { Exercise } from "~/types";
 import { Edit, Ellipsis, History, Trash2 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox"
-import { ExerciseForm } from "~/components/exercises/exercise-form";
-import { Sheet, SheetTrigger } from "~/components/ui/sheet";
+import { useExerciseSheet } from "./exercise-sheet-context";
 
 export function ExerciseListItem(exercise: Exercise) {
   const { id, name } = exercise;
+  const { setIsOpen, setExercise } = useExerciseSheet();
+
+  const handleEdit = () => {
+    setExercise(exercise);
+    setIsOpen(true);
+  };
+
   return (
     <li>
       <div className='flex justify-between'>
@@ -28,34 +34,29 @@ export function ExerciseListItem(exercise: Exercise) {
             {name}
           </label>
         </div>
-        <Sheet>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant='ghost' size='icon'>
-                <Ellipsis/>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem>
-                <History/>
-                <span>History</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator/>
-              <SheetTrigger asChild>
-                <DropdownMenuItem>
-                  <Edit/>
-                  <span>Edit</span>
-                </DropdownMenuItem>
-              </SheetTrigger>
-              <DropdownMenuSeparator/>
-              <DropdownMenuItem>
-                <Trash2/>
-                <span>Delete</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <ExerciseForm exercise={exercise}/>
-        </Sheet>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant='ghost' size='icon'>
+              <Ellipsis/>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem>
+              <History/>
+              <span>History</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator/>
+            <DropdownMenuItem onClick={handleEdit}>
+              <Edit/>
+              <span>Edit</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator/>
+            <DropdownMenuItem>
+              <Trash2/>
+              <span>Delete</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </li>
   )

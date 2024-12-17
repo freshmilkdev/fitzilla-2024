@@ -17,13 +17,10 @@ import { useEffect, useState } from "react";
 import { db } from "~/db";
 import type { Exercise } from "~/types";
 import { Textarea } from "../ui/textarea";
+import { useExerciseSheet } from "./exercise-sheet-context";
 
-interface ExerciseFormProps {
-  exercise?: Exercise;
-  onClose?: () => void;
-}
-
-export function ExerciseForm({ exercise, onClose }: ExerciseFormProps) {
+export function ExerciseForm() {
+  const { exercise, setIsOpen } = useExerciseSheet();
   const [name, setName] = useState(exercise?.name ?? "");
   const [description, setDescription] = useState(exercise?.description ?? "");
   const [muscleGroupId, setMuscleGroupId] = useState<number | undefined>(exercise?.muscleGroupId);
@@ -69,9 +66,10 @@ export function ExerciseForm({ exercise, onClose }: ExerciseFormProps) {
 
       // Reset form and close sheet
       setName("");
+      setDescription("");
       setMuscleGroupId(undefined);
       setIsBodyweight(false);
-      onClose?.();
+      setIsOpen(false);
     } catch (error) {
       console.error("Error saving exercise:", error);
     }
