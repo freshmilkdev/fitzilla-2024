@@ -5,26 +5,29 @@ import { Button } from "~/components/ui/button";
 import { Plus } from "lucide-react";
 import { ExerciseSheetProvider, useExerciseSheet } from "./exercise-sheet-context";
 import { PageHeader } from "../layout/page-header";
+import { AppHeader } from "../layout/app-header";
 
 function ExercisesContent() {
   const { isOpen, setIsOpen, setExercise } = useExerciseSheet();
 
   return (
-    <div className="container py-4">
-      <PageHeader title="Exercises" />
-      <MuscleGroupList />
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetTrigger asChild>
-          <Button 
-            className={'fixed mx-auto left-1/2 transform -translate-x-1/2 bottom-20 rounded-full h-14 w-14'}
-            onClick={() => setExercise(null)}
-          >
-            <Plus className={'!w-8 !h-8'} />
-          </Button>
-        </SheetTrigger>
-        <ExerciseForm />
-      </Sheet>
-    </div>
+    <>
+      <AppHeader title="Exercises" />
+      <div className="container py-4">
+        <MuscleGroupList />
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+          <SheetTrigger asChild>
+            <Button
+              className={'fixed mx-auto left-1/2 transform -translate-x-1/2 bottom-20 rounded-full h-14 w-14'}
+              onClick={() => setExercise(null)}
+            >
+              <Plus className={'!w-8 !h-8'} />
+            </Button>
+          </SheetTrigger>
+          <ExerciseForm />
+        </Sheet>
+      </div>
+    </>
   )
 }
 

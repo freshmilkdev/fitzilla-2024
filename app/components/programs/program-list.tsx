@@ -49,7 +49,7 @@ export function ProgramList() {
         <li key={`exercise-${id}`} className='hover:bg-slate-100 dark:hover:bg-slate-950 transition duration-200'>
           <NavLink to={`${routePaths.programs}/${id}`} className='flex items-center px-4 py-3'>
             <span className='flex flex-col grow text-lg pr-2'>
-              <span className=''>{name}</span>
+              <span className='font-medium'>{name}</span>
               <span className='text-muted-foreground text-sm'>{description}</span>
             </span>
           

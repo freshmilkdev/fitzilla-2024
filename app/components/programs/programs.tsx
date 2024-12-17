@@ -6,14 +6,18 @@ import { Badge } from "~/components/ui/badge";
 import { routePaths } from "~/routes";
 import { ProgramList } from "./program-list";
 import { PageHeader } from "../layout/page-header";
+import { AppHeader } from "../layout/app-header";
 
 
 export default function Programs() {
 
     return (
-        <div className="container py-4">
-            <PageHeader title="Programs" />
-            <ProgramList />
-        </div>
+        <>
+            <AppHeader title="Programs" />
+            <div className="container py-4">
+                <ProgramList />
+            </div>
+        </>
+
     )
 }
