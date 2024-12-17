@@ -36,7 +36,7 @@ export function ExerciseListItem(exercise: Exercise) {
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant='ghost' size='icon'>
+            <Button variant='ghost' size='icon' className="rounded-full">
               <Ellipsis/>
             </Button>
           </DropdownMenuTrigger>

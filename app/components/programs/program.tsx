@@ -3,48 +3,101 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "~/db";
 import { PageHeader } from "../layout/page-header";
 import { Separator } from "../ui/separator";
-import type { Program } from "~/types";
+import type { Exercise, Program } from "~/types";
 import { Button } from "../ui/button";
-import { Plus } from "lucide-react";
+import { Pencil, Plus, History, Edit, Trash2, Ellipsis } from "lucide-react";
 import type { Route } from "../../routes/+types/program";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "../ui/dropdown-menu";
 
 export default function Program({
     id,
-  }: {
+}: {
     id: string | null;
-  }) {
-  
+}) {
 
-  const program = useLiveQuery(
-    async () => {
-      if (!id) return null;
-      return await db.programs.get(Number(id));
-    },
-    [id]
-  );
 
-  if (!program) {
-    return <div>Loading program...</div>;
-  }
+    const program = useLiveQuery(
+        async () => {
+            if (!id) return null;
+            const programExercises = await db.programExercises
+                .where('programId')
+                .equals(Number(id))
+                .sortBy('order');
 
-  return (
-    <div className="container py-4">
-      <PageHeader title={program.name} />
-      <div className="text-muted-foreground mb-4">
-        {program.description}
-      </div>
-      <Separator className="mb-4" />
-      
-      {/* List of exercises in the program will go here */}
-      <div className="py-4">
-        <Button 
-          className="w-full"
-          onClick={() => {/* Add exercise to program logic */}}
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Add Exercise
-        </Button>
-      </div>
-    </div>
-  );
+            const exercises = await Promise.all(
+                programExercises.map(pe =>
+                    db.exercises.get(pe.exerciseId)
+                )
+            );
+
+            const programWithExercises = {
+                ...(await db.programs.get(Number(id))),
+                exercises: exercises.filter((e): e is Exercise => e !== undefined)
+            };
+            return programWithExercises;
+
+        },
+        [id]
+    );
+
+    if (!program) {
+        return <div>Loading program...</div>;
+    }
+
+    //todo: toggle edit program name and description and exercises
+    //todo: add exercise to program logic
+    //todo: add exercises list without accordion for this view
+
+    return (
+        <div className="container py-4">
+            <div className="flex justify-between items-center pr-4">
+                <PageHeader title={program.name ?? ''} />
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button className="rounded-full" variant='ghost' size='icon'>
+                            <Ellipsis />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <DropdownMenuItem>
+                            <History />
+                            <span>History</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>
+                            <Edit />
+                            <span>Edit</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>
+                            <Trash2 />
+                            <span>Delete</span>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+            <div className="text-muted-foreground mb-4 px-4">
+                {program.description}
+            </div>
+            <Separator  />
+
+            <ul>
+                {program.exercises.map(({ id, name }) => (
+                    <li key={`exercise-${id}`} className=''>
+                        <span className='block text-lg px-4 py-2'>{name}</span>
+                        <Separator />
+                    </li>
+                ))}
+            </ul>
+            <div className="p-4">
+                <Button
+                    className="w-full"
+                    onClick={() => {/* Add exercise to program logic */ }}
+                >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Start Workout
+                </Button>
+            </div>
+        </div>
+    );
 } 

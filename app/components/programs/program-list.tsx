@@ -45,12 +45,14 @@ export function ProgramList() {
 
   return (
     <ul>
-      {programs.map(({ id, name, exercises }) => (
+      {programs.map(({ id, name, description, exercises }) => (
         <li key={`exercise-${id}`} className='hover:bg-slate-100 dark:hover:bg-slate-950 transition duration-200'>
           <NavLink to={`${routePaths.programs}/${id}`} className='flex items-center px-4 py-3'>
-            <span className='flex grow text-lg'>
+            <span className='flex flex-col grow text-lg pr-2'>
               <span className=''>{name}</span>
+              <span className='text-muted-foreground text-sm'>{description}</span>
             </span>
+          
             <Badge variant='secondary'>{exercises.length}</Badge>
             <ChevronRight size={18} />
           </NavLink>
