@@ -16,6 +16,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useEffect, useState } from "react";
 import { db } from "~/db";
 import type { Exercise } from "~/types";
+import { Textarea } from "../ui/textarea";
 
 interface ExerciseFormProps {
   exercise?: Exercise;
@@ -24,13 +25,16 @@ interface ExerciseFormProps {
 
 export function ExerciseForm({ exercise, onClose }: ExerciseFormProps) {
   const [name, setName] = useState(exercise?.name ?? "");
+  const [description, setDescription] = useState(exercise?.description ?? "");
   const [muscleGroupId, setMuscleGroupId] = useState<number | undefined>(exercise?.muscleGroupId);
   const [isBodyweight, setIsBodyweight] = useState(exercise?.isBodyweight ?? false);
 
   // Reset form when exercise prop changes
   useEffect(() => {
     setName(exercise?.name ?? "");
+    setDescription(exercise?.description ?? "");
     setMuscleGroupId(exercise?.muscleGroupId);
+    setIsBodyweight(exercise?.isBodyweight ?? false);
   }, [exercise]);
 
   // Fetch muscle groups for select dropdown
@@ -46,13 +50,16 @@ export function ExerciseForm({ exercise, onClose }: ExerciseFormProps) {
         // Update existing exercise
         await db.exercises.update(exercise.id, {
           name,
+          description,
           muscleGroupId,
+          isBodyweight,
           updatedAt: new Date()
         });
       } else {
         // Create new exercise
         await db.exercises.add({
           name,
+          description,
           muscleGroupId,
           isBodyweight,
           createdAt: new Date(),
@@ -86,6 +93,14 @@ export function ExerciseForm({ exercise, onClose }: ExerciseFormProps) {
             id="exercise" 
             value={name}
             onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div>
+          <Label htmlFor="description">Description</Label>
+          <Textarea 
+            id="description" 
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </div>
         <div>

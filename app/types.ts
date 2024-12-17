@@ -10,6 +10,7 @@ export interface MuscleGroup {
 export interface Exercise {
   id: number;
   name: string;
+  description?: string;
   muscleGroupId: number;
   isBodyweight: boolean;
   createdAt: Date;
