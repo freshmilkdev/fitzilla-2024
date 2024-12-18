@@ -52,9 +52,8 @@ export function ProgramList() {
               <span className='font-medium'>{name}</span>
               <span className='text-muted-foreground text-sm'>{description}</span>
             </span>
-          
-            <Badge variant='secondary'>{exercises.length}</Badge>
-            <ChevronRight size={18} />
+            <Badge className="mr-2 h-6 w-6 items-center justify-center font-normal">{exercises.length}</Badge>
+            <ChevronRight size={16} className="text-muted-foreground"/>
           </NavLink>
           <Separator />
         </li>

@@ -53,8 +53,14 @@ export default function Program({
         <>
             <AppHeader title={'Programs'} variant='subpage' />
             <div className="container py-4">
-                <div className="flex justify-between items-center pr-4">
-                    <PageHeader title={program.name ?? ''} />
+                <div className="px-4 py-3 flex justify-between items-center">
+                    <div className="">
+                        <h2 className="text-lg font-medium">{program.name}</h2>
+                        <div className="text-muted-foreground text-sm">
+                            {program.description}
+                        </div>
+
+                    </div>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button className="rounded-full" variant='ghost' size='icon'>
@@ -62,10 +68,6 @@ export default function Program({
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                            <DropdownMenuItem>
-                                <History />
-                                <span>History</span>
-                            </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>
                                 <Edit />
@@ -78,9 +80,6 @@ export default function Program({
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                </div>
-                <div className="text-muted-foreground text-sm mb-4 px-4">
-                    {program.description}
                 </div>
                 <Separator />
 

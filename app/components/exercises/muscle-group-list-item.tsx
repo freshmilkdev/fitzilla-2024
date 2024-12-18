@@ -7,9 +7,9 @@ export default function MuscleGroupListItem({ name, exercises }: MuscleGroupWith
   return (
     <AccordionItem value={name} className="px-4">
       <AccordionTrigger className={'text-lg font-medium hover:no-underline'}>
-        <div className='flex grow justify-between pr-4'>
+        <div className='flex grow justify-between pr-2'>
           <span>{name}</span>
-          <Badge>{exercises.length}</Badge>
+          <Badge className="h-6 w-6 items-center justify-center font-normal">{exercises.length}</Badge>
         </div>
       </AccordionTrigger>
       <AccordionContent className='py-2'>
