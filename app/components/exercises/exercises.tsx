@@ -7,15 +7,21 @@ import { ExerciseSheetProvider, useExerciseSheet } from "../../context/exercise-
 import { PageHeader } from "../layout/page-header";
 import { AppHeader } from "../layout/app-header";
 import { DialogProvider } from "~/context/dialog-context";
+import { useGroupedExercises } from "~/hooks/use-grouped-exercises";
 
 function ExercisesContent() {
   const { isOpen, setIsOpen, setExercise } = useExerciseSheet();
+  const groupedExercises = useGroupedExercises();
+
+  if (!groupedExercises) {
+    return <div>Loading exercises...</div>;
+  }
 
   return (
     <>
       <AppHeader title="Exercises" />
       <div className="container py-4">
-        <MuscleGroupList />
+        <MuscleGroupList groupedExercises={groupedExercises} />
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
             <Button
