@@ -20,7 +20,7 @@ function ExercisesContent() {
   return (
     <>
       <AppHeader title="Exercises" />
-      <div className="container py-4">
+      <div className="container pt-4 pb-20">
         <MuscleGroupList groupedExercises={groupedExercises} variant="withOptions" />
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>

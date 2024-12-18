@@ -13,7 +13,7 @@ function ProgramsContent() {
   return (
     <>
       <AppHeader title="Programs" />
-      <div className="container py-4">
+      <div className="container pt-4 pb-20">
         <ProgramList />
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
