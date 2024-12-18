@@ -12,8 +12,13 @@ import { useExerciseSheet } from "../../context/exercise-sheet-context";
 import { useDialog } from "../../context/dialog-context";
 import { db } from "~/db";
 import { BaseExerciseListItem } from "./base-exercise-list-item";
+import { Checkbox } from "../ui/checkbox";
 
-export function ExerciseListItem(exercise: Exercise) {
+interface ExerciseListItemProps extends Exercise {
+  variant?: 'plain' | 'withCheckbox' | 'withOptions';
+}
+
+function ExerciseItemWithOptions(exercise: Exercise) {
   const { setIsOpen, setExercise } = useExerciseSheet();
   const { showConfirmDialog } = useDialog();
 
@@ -62,10 +67,22 @@ export function ExerciseListItem(exercise: Exercise) {
         </DropdownMenuContent>
       </DropdownMenu>
     </BaseExerciseListItem>
-  )
+  );
 }
 
-// Simple version without controls
-export function SimpleExerciseListItem(exercise: Exercise) {
-  return <BaseExerciseListItem exercise={exercise} />;
+export function ExerciseListItem({ variant = 'withOptions', ...exercise }: ExerciseListItemProps) {
+  if (variant === 'plain') {
+    return <BaseExerciseListItem exercise={exercise} />;
+  }
+
+  if (variant === 'withCheckbox') {
+    return (
+      <BaseExerciseListItem 
+        exercise={exercise}
+        prefix={<Checkbox id={exercise.id.toString()} />}
+      />
+    );
+  }
+
+  return <ExerciseItemWithOptions {...exercise} />;
 }

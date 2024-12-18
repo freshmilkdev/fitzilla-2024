@@ -21,7 +21,7 @@ function ExercisesContent() {
     <>
       <AppHeader title="Exercises" />
       <div className="container py-4">
-        <MuscleGroupList groupedExercises={groupedExercises} />
+        <MuscleGroupList groupedExercises={groupedExercises} variant="withOptions" />
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
             <Button

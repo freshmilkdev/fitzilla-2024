@@ -76,7 +76,10 @@ export function ProgramForm() {
                 </div>
                 <div>
                     <Label>Exercises</Label>
-                    <MuscleGroupList showControls={false} groupedExercises={groupedExercises} />
+                    <MuscleGroupList 
+                        groupedExercises={groupedExercises} 
+                        variant="withCheckbox" 
+                    />
                 </div>
             </div>
             <SheetFooter>
