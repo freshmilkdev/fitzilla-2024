@@ -13,6 +13,7 @@ import { useDialog } from "../../context/dialog-context";
 import { db } from "~/db";
 import { BaseExerciseListItem } from "./base-exercise-list-item";
 import { Checkbox } from "../ui/checkbox";
+import { useSelectedExercises } from "../../context/selected-exercises-context";
 
 interface ExerciseListItemProps extends Exercise {
   variant?: 'plain' | 'withCheckbox' | 'withOptions';
@@ -70,18 +71,30 @@ function ExerciseItemWithOptions(exercise: Exercise) {
   );
 }
 
+function ExerciseListItemWithCheckbox(exercise: Exercise) {
+  const { selectedExercises, toggleExercise } = useSelectedExercises();
+  
+  return (
+    <BaseExerciseListItem 
+      exercise={exercise}
+      prefix={
+        <Checkbox 
+          id={exercise.id.toString()} 
+          checked={selectedExercises.has(exercise.id)}
+          onCheckedChange={() => toggleExercise(exercise.id)}
+        />
+      }
+    />
+  );
+}
+
 export function ExerciseListItem({ variant = 'withOptions', ...exercise }: ExerciseListItemProps) {
   if (variant === 'plain') {
     return <BaseExerciseListItem exercise={exercise} />;
   }
 
   if (variant === 'withCheckbox') {
-    return (
-      <BaseExerciseListItem 
-        exercise={exercise}
-        prefix={<Checkbox id={exercise.id.toString()} />}
-      />
-    );
+    return <ExerciseListItemWithCheckbox {...exercise} />;
   }
 
   return <ExerciseItemWithOptions {...exercise} />;

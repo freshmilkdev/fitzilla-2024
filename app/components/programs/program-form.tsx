@@ -9,9 +9,19 @@ import { db } from "~/db"
 import { useGroupedExercises } from "~/hooks/use-grouped-exercises"
 import { MuscleGroupList } from "../exercises/muscle-group-list"
 import { Save } from "lucide-react"
+import { SelectedExercisesProvider, useSelectedExercises } from "../../context/selected-exercises-context"
 
 export function ProgramForm() {
+    return (
+        <SelectedExercisesProvider>
+            <ProgramFormContent />
+        </SelectedExercisesProvider>
+    );
+}
+
+export function ProgramFormContent() {
     const { program, setIsOpen } = useProgramSheet();
+    const { selectedExercises, clearSelection } = useSelectedExercises();
     const [name, setName] = useState(program?.name ?? "");
     const [description, setDescription] = useState(program?.description ?? "");
     const groupedExercises = useGroupedExercises();
@@ -21,18 +31,25 @@ export function ProgramForm() {
         setDescription(program?.description ?? "");
     }, [program]);
 
+    
+    
     const handleSubmit = async () => {
         if (!name) return;
 
         try {
+            let programId: number;
+            
             if (program?.id) {
-                await db.programs.update(program.id, {
+                programId = program.id;
+                await db.programs.update(programId, {
                     name,
                     description,
                     updatedAt: new Date()
                 });
+                // Delete existing program exercises
+                await db.programExercises.where('programId').equals(programId).delete();
             } else {
-                await db.programs.add({
+                programId = await db.programs.add({
                     name,
                     description,
                     createdAt: new Date(),
@@ -40,8 +57,20 @@ export function ProgramForm() {
                 });
             }
 
+            // Add selected exercises to program
+            const programExercises = Array.from(selectedExercises).map((exerciseId, index) => ({
+                programId,
+                exerciseId,
+                order: index,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            }));
+
+            await db.programExercises.bulkAdd(programExercises);
+
             setName("");
             setDescription("");
+            clearSelection();
             setIsOpen(false);
         } catch (error) {
             console.error("Error saving program:", error);

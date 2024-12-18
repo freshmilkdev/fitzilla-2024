@@ -46,8 +46,7 @@ export default function Program({
     }
 
     //todo: toggle edit program name and description and exercises
-    //todo: add exercise to program logic
-    //todo: add exercises list without accordion for this view
+
 
     return (
         <>
