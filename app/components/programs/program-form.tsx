@@ -11,28 +11,34 @@ import { MuscleGroupList } from "../exercises/muscle-group-list"
 import { Save } from "lucide-react"
 import { SelectedExercisesProvider, useSelectedExercises } from "../../context/selected-exercises-context"
 
-export function ProgramForm() {
+export function ProgramForm({ selectedExerciseIds }: { selectedExerciseIds?: number[] }) {
     return (
         <SelectedExercisesProvider>
-            <ProgramFormContent />
+            <ProgramFormContent selectedExerciseIds={selectedExerciseIds} />
         </SelectedExercisesProvider>
     );
 }
 
-export function ProgramFormContent() {
+export function ProgramFormContent({ selectedExerciseIds }: { selectedExerciseIds?: number[] }) {
     const { program, setIsOpen } = useProgramSheet();
-    const { selectedExercises, clearSelection } = useSelectedExercises();
+    const { selectedExercises, setSelectedExercises, clearSelection } = useSelectedExercises();
     const [name, setName] = useState(program?.name ?? "");
     const [description, setDescription] = useState(program?.description ?? "");
     const groupedExercises = useGroupedExercises();
 
+    // Handle form field values
     useEffect(() => {
         setName(program?.name ?? "");
         setDescription(program?.description ?? "");
     }, [program]);
 
-    
-    
+    // Handle initial exercise selection
+    useEffect(() => {
+        if (selectedExerciseIds?.length) {
+            setSelectedExercises(selectedExerciseIds);
+        }
+    }, []); // Run only once on mount
+
     const handleSubmit = async () => {
         if (!name) return;
 
@@ -70,7 +76,7 @@ export function ProgramFormContent() {
 
             setName("");
             setDescription("");
-            clearSelection();
+            // clearSelection();
             setIsOpen(false);
         } catch (error) {
             console.error("Error saving program:", error);

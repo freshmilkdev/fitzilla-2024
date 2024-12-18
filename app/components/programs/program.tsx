@@ -70,7 +70,7 @@ export default function Program({
 
     //todo: toggle edit program name and description and exercises
 
-
+    
     return (
         <>
             <AppHeader title={'Programs'} variant='subpage' />
@@ -125,7 +125,7 @@ export default function Program({
             </div>
 
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                <ProgramForm />
+                <ProgramForm selectedExerciseIds={program.exercises.map(e => e.id)}/>
             </Sheet>
         </>
     );
