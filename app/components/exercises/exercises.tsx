@@ -3,9 +3,10 @@ import { ExerciseForm } from "~/components/exercises/exercise-form";
 import { Sheet, SheetTrigger } from "~/components/ui/sheet";
 import { Button } from "~/components/ui/button";
 import { Plus } from "lucide-react";
-import { ExerciseSheetProvider, useExerciseSheet } from "./exercise-sheet-context";
+import { ExerciseSheetProvider, useExerciseSheet } from "../../context/exercise-sheet-context";
 import { PageHeader } from "../layout/page-header";
 import { AppHeader } from "../layout/app-header";
+import { DialogProvider } from "~/context/dialog-context";
 
 function ExercisesContent() {
   const { isOpen, setIsOpen, setExercise } = useExerciseSheet();
@@ -34,7 +35,9 @@ function ExercisesContent() {
 export default function Exercises() {
   return (
     <ExerciseSheetProvider>
-      <ExercisesContent />
+      <DialogProvider>
+        <ExercisesContent />
+      </DialogProvider>
     </ExerciseSheetProvider>
   )
 }

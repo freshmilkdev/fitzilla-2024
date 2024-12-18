@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { db } from "~/db";
 import type { Exercise } from "~/types";
 import { Textarea } from "../ui/textarea";
-import { useExerciseSheet } from "./exercise-sheet-context";
+import { useExerciseSheet } from "../../context/exercise-sheet-context";
 
 export function ExerciseForm() {
   const { exercise, setIsOpen } = useExerciseSheet();

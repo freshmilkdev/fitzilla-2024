@@ -11,28 +11,32 @@ import type { Exercise } from "~/types";
 import { Edit, Ellipsis, History, Trash2 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox"
-import { useExerciseSheet } from "./exercise-sheet-context";
-import { ConfirmDialog } from "~/components/ui/confirm-dialog";
+import { useExerciseSheet } from "../../context/exercise-sheet-context";
+import { useDialog } from "../../context/dialog-context";
 import { db } from "~/db";
-import { useState } from "react";
 
 export function ExerciseListItem(exercise: Exercise) {
-  const { id, name } = exercise;
   const { setIsOpen, setExercise } = useExerciseSheet();
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const { showConfirmDialog } = useDialog();
+  const { id, name } = exercise;
 
   const handleEdit = () => {
     setExercise(exercise);
     setIsOpen(true);
   };
 
-  const handleDelete = async () => {
-    try {
-      await db.exercises.delete(exercise.id);
-      setShowDeleteDialog(false);
-    } catch (error) {
-      console.error("Error deleting exercise:", error);
-    }
+  const handleDelete = () => {
+    showConfirmDialog({
+      title: "Delete Exercise",
+      description: `Are you sure you want to delete "${exercise.name}"?`,
+      onConfirm: async () => {
+        try {
+          await db.exercises.delete(exercise.id);
+        } catch (error) {
+          console.error("Error deleting exercise:", error);
+        }
+      },
+    });
   };
 
   return (
@@ -64,20 +68,13 @@ export function ExerciseListItem(exercise: Exercise) {
               <span>Edit</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator/>
-            <DropdownMenuItem onClick={() => setShowDeleteDialog(true)}>
+            <DropdownMenuItem onClick={handleDelete}>
               <Trash2/>
               <span>Delete</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <ConfirmDialog
-        open={showDeleteDialog}
-        onOpenChange={setShowDeleteDialog}
-        title="Delete Exercise"
-        description={`Are you sure you want to delete "${exercise.name}"?`}
-        onConfirm={handleDelete}
-      />
     </li>
   )
 }
