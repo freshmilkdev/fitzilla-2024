@@ -9,13 +9,18 @@ import { Pencil, Plus, History, Edit, Trash2, Ellipsis } from "lucide-react";
 import type { Route } from "../../routes/+types/program";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "../ui/dropdown-menu";
 import { AppHeader } from "../layout/app-header";
+import { useProgramSheet } from "../../context/program-sheet-context";
+import { Sheet } from "../ui/sheet";
+import { ProgramForm } from "./program-form";
+import { useSelectedExercises } from "../../context/selected-exercises-context";
 
 export default function Program({
     id,
 }: {
     id: string | null;
 }) {
-
+    const { isOpen, setIsOpen, setProgram } = useProgramSheet();
+    const { setSelectedExercises } = useSelectedExercises();
 
     const program = useLiveQuery(
         async () => {
@@ -40,6 +45,24 @@ export default function Program({
         },
         [id]
     );
+
+    const handleEdit = () => {
+        if (!program) return;
+        
+        // Set program data for the form
+        setProgram({
+            id: program.id ?? 0,
+            name: program.name ?? '',
+            description: program.description ?? '',
+            createdAt: program.createdAt ?? new Date(),
+            updatedAt: program.updatedAt ?? new Date()
+        });
+
+        // Set selected exercises
+        setSelectedExercises(program.exercises.map(e => e.id));
+        
+        setIsOpen(true);
+    };
 
     if (!program) {
         return <div>Loading program...</div>;
@@ -68,7 +91,7 @@ export default function Program({
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={handleEdit}>
                                 <Edit />
                                 <span>Edit</span>
                             </DropdownMenuItem>
@@ -100,6 +123,10 @@ export default function Program({
                     </Button>
                 </div>
             </div>
+
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                <ProgramForm />
+            </Sheet>
         </>
     );
 } 

@@ -4,6 +4,7 @@ interface SelectedExercisesContextType {
   selectedExercises: Set<number>;
   toggleExercise: (exerciseId: number) => void;
   clearSelection: () => void;
+  setSelectedExercises: (exerciseIds: number[]) => void;
 }
 
 export const SelectedExercisesContext = React.createContext<SelectedExercisesContextType | undefined>(undefined)
@@ -30,7 +31,8 @@ export function SelectedExercisesProvider({ children }: { children: React.ReactN
   const value = React.useMemo(() => ({
     selectedExercises,
     toggleExercise,
-    clearSelection
+    clearSelection,
+    setSelectedExercises: (exerciseIds: number[]) => setSelectedExercises(new Set(exerciseIds))
   }), [selectedExercises, toggleExercise, clearSelection]);
 
   return (
