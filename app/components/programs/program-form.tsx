@@ -11,6 +11,19 @@ import { MuscleGroupList } from "../exercises/muscle-group-list"
 import { Save } from "lucide-react"
 import { SelectedExercisesProvider, useSelectedExercises } from "../../context/selected-exercises-context"
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
+
+const programFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  description: z.string().optional(),
+  exercises: z.array(z.number()).min(1, "Select at least one exercise")
+});
+
+type ProgramFormValues = z.infer<typeof programFormSchema>;
+
 export function ProgramForm({ selectedExerciseIds }: { selectedExerciseIds?: number[] }) {
     return (
         <SelectedExercisesProvider>
@@ -21,49 +34,70 @@ export function ProgramForm({ selectedExerciseIds }: { selectedExerciseIds?: num
 
 export function ProgramFormContent({ selectedExerciseIds }: { selectedExerciseIds?: number[] }) {
     const { program, setIsOpen } = useProgramSheet();
-    const { selectedExercises, setSelectedExercises, clearSelection } = useSelectedExercises();
-    const [name, setName] = useState(program?.name ?? "");
-    const [description, setDescription] = useState(program?.description ?? "");
+    const { selectedExercises, setSelectedExercises } = useSelectedExercises();
     const groupedExercises = useGroupedExercises();
 
-    // Handle form field values
-    useEffect(() => {
-        setName(program?.name ?? "");
-        setDescription(program?.description ?? "");
-    }, [program]);
-
-    // Handle initial exercise selection
-    useEffect(() => {
-        if (selectedExerciseIds?.length) {
-            setSelectedExercises(selectedExerciseIds);
+    const form = useForm<ProgramFormValues>({
+        resolver: zodResolver(programFormSchema),
+        defaultValues: {
+            name: "",
+            description: "",
+            exercises: []
         }
-    }, []); // Run only once on mount
+    });
 
-    const handleSubmit = async () => {
-        if (!name) return;
+    // Handle initialization for both new and edit cases
+    useEffect(() => {
+        if (program) {
+            // Edit case
+            form.reset({
+                name: program.name,
+                description: program.description ?? "",
+                exercises: selectedExerciseIds ?? []
+            });
+            setSelectedExercises(selectedExerciseIds ?? []);
+        } else {
+            // New case
+            form.reset({
+                name: "",
+                description: "",
+                exercises: []
+            });
+            setSelectedExercises([]);
+        }
+    }, [program, selectedExerciseIds]);
 
+    // Sync form with selected exercises
+    useEffect(() => {
+        const exercises = Array.from(selectedExercises);
+        form.setValue("exercises", exercises);
+        // Trigger validation immediately after setting value
+        if (form.formState.isSubmitted) {
+            form.trigger("exercises");
+        }
+    }, [selectedExercises, form]);
+
+    const onSubmit = async (data: ProgramFormValues) => {
         try {
             let programId: number;
             
             if (program?.id) {
                 programId = program.id;
                 await db.programs.update(programId, {
-                    name,
-                    description,
+                    name: data.name,
+                    description: data.description,
                     updatedAt: new Date()
                 });
-                // Delete existing program exercises
                 await db.programExercises.where('programId').equals(programId).delete();
             } else {
                 programId = await db.programs.add({
-                    name,
-                    description,
+                    name: data.name,
+                    description: data.description,
                     createdAt: new Date(),
                     updatedAt: new Date()
                 });
             }
 
-            // Add selected exercises to program
             const programExercises = Array.from(selectedExercises).map((exerciseId, index) => ({
                 programId,
                 exerciseId,
@@ -73,10 +107,8 @@ export function ProgramFormContent({ selectedExerciseIds }: { selectedExerciseId
             }));
 
             await db.programExercises.bulkAdd(programExercises);
-
-            setName("");
-            setDescription("");
-            // clearSelection();
+            form.reset();
+            setSelectedExercises([]);
             setIsOpen(false);
         } catch (error) {
             console.error("Error saving program:", error);
@@ -92,39 +124,65 @@ export function ProgramFormContent({ selectedExerciseIds }: { selectedExerciseId
                 </SheetDescription>
             </SheetHeader>
 
-            <div className="grid gap-4 py-4">
-                <div>
-                    <Label htmlFor="name">Name</Label>
-                    <Input
-                        id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 py-4">
+                    <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Name</FormLabel>
+                                <FormControl>
+                                    <Input {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
-                </div>
-                <div>
-                    <Label htmlFor="description">Description</Label>
-                    <Textarea
-                        id="description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+
+                    <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Description</FormLabel>
+                                <FormControl>
+                                    <Textarea {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
-                </div>
-                <div>
-                    <Label>Exercises</Label>
-                    <MuscleGroupList 
-                        groupedExercises={groupedExercises} 
-                        variant="withCheckbox" 
+
+                    <FormField
+                        control={form.control}
+                        name="exercises"
+                        render={({ field, fieldState }) => (
+                            <FormItem>
+                                <FormLabel>Exercises</FormLabel>
+                                <FormControl>
+                                    <MuscleGroupList 
+                                        groupedExercises={groupedExercises} 
+                                        variant="withCheckbox" 
+                                    />
+                                </FormControl>
+                                {fieldState.error && (
+                                    <FormMessage>
+                                        {fieldState.error.message}
+                                    </FormMessage>
+                                )}
+                            </FormItem>
+                        )}
                     />
-                </div>
-            </div>
-            <SheetFooter>
-                <SheetClose asChild>
-                    <Button type="submit" onClick={handleSubmit}>
-                        <Save />
-                        Save
-                    </Button>
-                </SheetClose>
-            </SheetFooter>
+
+                    <SheetFooter>
+                        <Button type="submit">
+                            <Save className="mr-2" />
+                            Save
+                        </Button>
+                    </SheetFooter>
+                </form>
+            </Form>
         </SheetContent>
     )
 } 
