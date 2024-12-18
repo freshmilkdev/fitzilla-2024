@@ -13,6 +13,7 @@ import { useProgramSheet } from "../../context/program-sheet-context";
 import { Sheet } from "../ui/sheet";
 import { ProgramForm } from "./program-form";
 import { useSelectedExercises } from "../../context/selected-exercises-context";
+import { useDialog } from "../../context/dialog-context";
 
 export default function Program({
     id,
@@ -21,6 +22,7 @@ export default function Program({
 }) {
     const { isOpen, setIsOpen, setProgram } = useProgramSheet();
     const { setSelectedExercises } = useSelectedExercises();
+    const { showConfirmDialog } = useDialog();
 
     const program = useLiveQuery(
         async () => {
@@ -64,6 +66,32 @@ export default function Program({
         setIsOpen(true);
     };
 
+    const handleDelete = () => {
+        if (!program) return;
+
+        showConfirmDialog({
+            title: "Delete Program",
+            description: `Are you sure you want to delete "${program.name}"? This action cannot be undone.`,
+            onConfirm: async () => {
+                try {
+                    // Delete program exercises first (foreign key constraint)
+                    await db.programExercises
+                        .where('programId')
+                        .equals(program.id as number)
+                        .delete();
+                    
+                    // Then delete the program
+                    await db.programs.delete(program.id as number);
+
+                    // Navigate back to programs list
+                    window.history.back();
+                } catch (error) {
+                    console.error("Error deleting program:", error);
+                }
+            },
+        });
+    };
+
     if (!program) {
         return <div>Loading program...</div>;
     }
@@ -96,7 +124,10 @@ export default function Program({
                                 <span>Edit</span>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>
+                            <DropdownMenuItem 
+                                onClick={handleDelete}
+                                className="text-destructive focus:text-destructive"
+                            >
                                 <Trash2 />
                                 <span>Delete</span>
                             </DropdownMenuItem>
