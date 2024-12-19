@@ -14,7 +14,9 @@ import { Sheet } from "../ui/sheet";
 import { ProgramForm } from "./program-form";
 import { useSelectedExercises } from "../../context/selected-exercises-context";
 import { useDialog } from "../../context/dialog-context";
-
+import { NavLink, useNavigate } from "react-router";
+import { routePaths } from "~/routes";
+import { useWorkout } from "~/context/workout-context";
 export default function Program({
     id,
 }: {
@@ -23,7 +25,8 @@ export default function Program({
     const { isOpen, setIsOpen, setProgram } = useProgramSheet();
     const { setSelectedExercises } = useSelectedExercises();
     const { showConfirmDialog } = useDialog();
-
+    const navigate = useNavigate();
+    const { startWorkout } = useWorkout();
     const program = useLiveQuery(
         async () => {
             if (!id) return null;
@@ -50,7 +53,7 @@ export default function Program({
 
     const handleEdit = () => {
         if (!program) return;
-        
+
         // Set program data for the form
         setProgram({
             id: program.id ?? 0,
@@ -62,7 +65,7 @@ export default function Program({
 
         // Set selected exercises
         setSelectedExercises(program.exercises.map(e => e.id));
-        
+
         setIsOpen(true);
     };
 
@@ -79,7 +82,7 @@ export default function Program({
                         .where('programId')
                         .equals(program.id as number)
                         .delete();
-                    
+
                     // Then delete the program
                     await db.programs.delete(program.id as number);
 
@@ -98,7 +101,7 @@ export default function Program({
 
     //todo: toggle edit program name and description and exercises
 
-    
+
     return (
         <>
             <AppHeader title={'Programs'} variant='subpage' />
@@ -124,7 +127,7 @@ export default function Program({
                                 <span>Edit</span>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem 
+                            <DropdownMenuItem
                                 onClick={handleDelete}
                                 className="text-destructive focus:text-destructive"
                             >
@@ -147,7 +150,10 @@ export default function Program({
                 <div className="p-4">
                     <Button
                         className="w-full"
-                        onClick={() => {/* Add exercise to program logic */ }}
+                        onClick={() => {
+                            startWorkout(program.id as number);
+                            navigate(routePaths.workout);
+                        }}
                     >
                         <Plus className="mr-2 h-4 w-4" />
                         Start Workout
@@ -156,7 +162,7 @@ export default function Program({
             </div>
 
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                <ProgramForm selectedExerciseIds={program.exercises.map(e => e.id)}/>
+                <ProgramForm selectedExerciseIds={program.exercises.map(e => e.id)} />
             </Sheet>
         </>
     );

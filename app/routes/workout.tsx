@@ -1,6 +1,6 @@
 import type {Route} from "./+types/workout";
 
-import WorkoutExerciseList from "~/components/workout/workout-exercise-list";
+import Workout from "~/components/workout/workout";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -10,5 +10,5 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function WorkoutPage() {
-  return <WorkoutExerciseList/>;
+  return <Workout/>;
 }

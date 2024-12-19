@@ -65,3 +65,31 @@ export interface MuscleGroupResponse extends MuscleGroup {
 export interface ProgramWithExercises extends Program {
   exercises: Exercise[];
 }
+
+// Add these new interfaces
+export type WorkoutStatus = 'active' | 'completed' | 'abandoned';
+
+export interface WorkoutSet {
+  weight?: number;
+  reps: number;
+  notes?: string;
+}
+
+export interface WorkoutExercise {
+  id?: number;
+  workoutId: number;
+  exerciseId: number;
+  exerciseName: string;
+  order: number;
+  sets: WorkoutSet[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Workout {
+  id?: number;
+  programId?: number;
+  status: WorkoutStatus;
+  startedAt: Date;
+  updatedAt: Date;
+}

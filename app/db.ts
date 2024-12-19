@@ -1,19 +1,25 @@
 import Dexie, { type EntityTable } from 'dexie';
-import type { MuscleGroup, Exercise, ProgramExercise, Program } from '~/types';
+import type { MuscleGroup, Exercise, ProgramExercise, Program, WorkoutExercise, Workout } from '~/types';
 
 const db = new Dexie('WorkoutDatabase') as Dexie & {
   muscleGroups: EntityTable<MuscleGroup, 'id'>;
   exercises: EntityTable<Exercise, 'id'>;
   programs: EntityTable<Program, 'id'>;
   programExercises: EntityTable<ProgramExercise, 'id'>;
+  workouts: EntityTable<Workout, 'id'>;
+  workoutExercises: EntityTable<WorkoutExercise, 'id'>;
 };
 
 // Schema declaration
-db.version(1).stores({
+db.version(2).stores({
   muscleGroups: '++id, name, createdAt, updatedAt',
   exercises: '++id, name, muscleGroupId, createdAt, updatedAt',
   programs: '++id, name, createdAt, updatedAt',
-  programExercises: '++id, programId, exerciseId, order, createdAt, updatedAt'
+  programExercises: '++id, programId, exerciseId, order, createdAt, updatedAt',
+  workouts: '++id, programId, status, startedAt, updatedAt',
+  workoutExercises: '++id, workoutId, exerciseId, order, createdAt, updatedAt'
+}).upgrade(tx => {
+  // Handle any data migration if needed
 });
 
 // Initialize database with seed data
