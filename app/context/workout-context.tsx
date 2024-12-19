@@ -1,6 +1,7 @@
 import * as React from "react";
 import { db } from "~/db";
 import type { Workout, WorkoutExercise, WorkoutSet } from "~/types";
+import { WORKOUT_STATUS } from '~/types';
 
 interface WorkoutContextType {
   currentWorkout: Workout | null;
@@ -24,7 +25,7 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
     const loadActiveWorkout = async () => {
       const workout = await db.workouts
         .where('status')
-        .equals('active')
+        .equals(WORKOUT_STATUS.ACTIVE)
         .first();
 
       if (workout) {
@@ -43,7 +44,7 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
   const startWorkout = async (programId?: number) => {
     const workout: Workout = {
       programId,
-      status: 'active',
+      status: WORKOUT_STATUS.ACTIVE,
       startedAt: new Date(),
       updatedAt: new Date()
     };
@@ -83,7 +84,7 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
     if (!currentWorkout?.id) return;
 
     await db.workouts.update(currentWorkout.id, {
-      status: 'completed',
+      status: WORKOUT_STATUS.COMPLETED,
       updatedAt: new Date()
     });
 
@@ -95,7 +96,7 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
     if (!currentWorkout?.id) return;
 
     await db.workouts.update(currentWorkout.id, {
-      status: 'abandoned',
+      status: WORKOUT_STATUS.ABANDONED,
       updatedAt: new Date()
     });
 

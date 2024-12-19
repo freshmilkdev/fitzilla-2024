@@ -67,7 +67,13 @@ export interface ProgramWithExercises extends Program {
 }
 
 // Add these new interfaces
-export type WorkoutStatus = 'active' | 'completed' | 'abandoned';
+export const WORKOUT_STATUS = {
+  ACTIVE: 'active',
+  COMPLETED: 'completed',
+  ABANDONED: 'abandoned'
+} as const;
+
+export type WorkoutStatus = typeof WORKOUT_STATUS[keyof typeof WORKOUT_STATUS];
 
 export interface WorkoutSet {
   weight?: number;
