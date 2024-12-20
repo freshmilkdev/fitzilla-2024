@@ -10,11 +10,6 @@ export default function WorkoutExercisePage({
   params,
 }: Route.ComponentProps) {
   return (
-    <div>
-      <AppHeader title="Workout" variant="subpage"/>
-      <div className="container py-4">
-        <WorkoutExercise id={params.exerciseId} />
-      </div>
-    </div>
+    <WorkoutExercise id={params.exerciseId} />
   );
 }
