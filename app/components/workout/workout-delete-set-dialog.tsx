@@ -7,8 +7,19 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog"
 import {Button} from "~/components/ui/button";
+import { useWorkout } from "~/context/workout-context";
 
-export default function WorkoutDeleteSetDialog() {
+export default function WorkoutDeleteSetDialog({ exerciseId, setIndex }: { exerciseId: number, setIndex: number }) {
+  const { deleteSet } = useWorkout();
+
+  const handleDelete = async () => {
+    try {
+      await deleteSet(exerciseId, setIndex);
+    } catch (error) {
+      console.error("Error deleting set:", error);
+    }
+  };
+
   return (
     <DialogContent>
       <DialogHeader>
@@ -20,11 +31,12 @@ export default function WorkoutDeleteSetDialog() {
       </DialogHeader>
       <DialogFooter className='flex flex-row justify-center space-x-4'>
         <DialogClose asChild>
-          <Button variant='outline'>Back</Button>
+          <Button variant='outline'>Cancel</Button>
         </DialogClose>
-        <Button variant='destructive'>Continue</Button>
+        <DialogClose asChild>
+          <Button variant='destructive' onClick={handleDelete}>Delete</Button>
+        </DialogClose>
       </DialogFooter>
     </DialogContent>
-
-  )
+  );
 }

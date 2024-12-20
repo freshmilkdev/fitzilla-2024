@@ -19,70 +19,66 @@ import type {WorkoutSet} from "~/types";
 interface WorkoutSetTableProps {
   exerciseId: number;
   sets: WorkoutSet[];
+  isBodyweight: boolean;
 }
 
-export default function WorkoutSetTable({exerciseId, sets}: WorkoutSetTableProps) {
+export default function WorkoutSetTable({exerciseId, sets, isBodyweight}: WorkoutSetTableProps) {
   const {updateSet} = useWorkout();
 
   return (
-    <Sheet>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>#</TableHead>
-            <TableHead>Weight</TableHead>
-            <TableHead>Reps</TableHead>
-            <TableHead>Notes</TableHead>
-            <TableHead className="text-right"/>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {sets.map((set, index) => (
-            <TableRow key={index}>
-              <TableCell className="font-medium">{index + 1}</TableCell>
-              <TableCell>{set.weight}</TableCell>
-              <TableCell>{set.reps}</TableCell>
-              <TableCell>{set.notes}</TableCell>
-              <TableCell className="text-right">
-                <Dialog>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant='ghost' size={'icon'}>
-                        <Ellipsis/>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem onClick={() => {
-                        const newSet = {...set};
-                        updateSet(exerciseId, sets.length, newSet);
-                      }}>
-                        <Copy/>
-                        <span>Copy</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator/>
-                      <SheetTrigger asChild>
-                        <DropdownMenuItem>
-                          <Edit/>
-                          <span>Edit</span>
-                        </DropdownMenuItem>
-                      </SheetTrigger>
-                      <DropdownMenuSeparator/>
-                      <DialogTrigger asChild>
-                        <DropdownMenuItem>
-                          <Trash2/>
-                          <span>Delete</span>
-                        </DropdownMenuItem>
-                      </DialogTrigger>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                  <WorkoutDeleteSetDialog exerciseId={exerciseId} setIndex={index}/>
-                </Dialog>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <WorkoutSetForm exerciseId={exerciseId}/>
-    </Sheet>
+    <div className="divide-y">
+      {sets.map((set, index) => (
+        <div key={index} className="py-1.5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-muted-foreground">#{index + 1}</span>
+              <span>
+                {set.reps} reps {!isBodyweight && set.weight && `× ${set.weight}kg`}
+              </span>
+            </div>
+            
+            <Dialog>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Ellipsis className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onClick={() => {
+                    const newSet = {...set};
+                    updateSet(exerciseId, sets.length, newSet);
+                  }}>
+                    <Copy/>
+                    <span>Copy</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator/>
+                  <SheetTrigger asChild>
+                    <DropdownMenuItem>
+                      <Edit/>
+                      <span>Edit</span>
+                    </DropdownMenuItem>
+                  </SheetTrigger>
+                  <DropdownMenuSeparator/>
+                  <DialogTrigger asChild>
+                    <DropdownMenuItem>
+                      <Trash2/>
+                      <span>Delete</span>
+                    </DropdownMenuItem>
+                  </DialogTrigger>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <WorkoutDeleteSetDialog exerciseId={exerciseId} setIndex={index}/>
+            </Dialog>
+          </div>
+          
+          {set.notes && (
+            <div className="pl-10 pt-0.5 text-sm text-muted-foreground">
+              "{set.notes}"
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
   )
 }

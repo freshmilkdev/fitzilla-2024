@@ -9,7 +9,7 @@ import {useState} from "react";
 export default function WorkoutExercise({id}: { id: string }) {
   const {workoutExercises} = useWorkout();
   const [open, setOpen] = useState(false);
-  const exercise = workoutExercises.find(e => e.exerciseId === Number(id));
+  const exercise = workoutExercises.find(e => e.exerciseId === parseInt(id));
 
   if (!exercise) {
     return <div>Exercise not found</div>;
@@ -19,7 +19,7 @@ export default function WorkoutExercise({id}: { id: string }) {
     <div className='px-4 space-y-3'>
       <h2 className='text-2xl font-semibold tracking-tight'>{exercise.exerciseName}</h2>
       {exercise.sets.length > 0 ? (
-        <WorkoutSetTable exerciseId={exercise.exerciseId} sets={exercise.sets} />
+        <WorkoutSetTable exerciseId={exercise.exerciseId} sets={exercise.sets} isBodyweight={exercise.isBodyweight} />
       ) : (
         <p className='text-muted-foreground'>Start by adding a set</p>
       )}

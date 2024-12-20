@@ -12,6 +12,7 @@ interface WorkoutContextType {
   updateExercise: (exerciseId: number, updates: Partial<WorkoutExercise>) => Promise<void>;
   addSet: (exerciseId: number, setData: WorkoutSet) => Promise<void>;
   updateSet: (exerciseId: number, setIndex: number, updates: Partial<WorkoutSet>) => Promise<void>;
+  deleteSet: (exerciseId: number, setIndex: number) => Promise<void>;
 }
 
 export const WorkoutContext = React.createContext<WorkoutContextType | undefined>(undefined);
@@ -193,6 +194,26 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+  const deleteSet = async (exerciseId: number, setIndex: number) => {
+    const exercise = workoutExercises.find(e => e.exerciseId === exerciseId);
+    if (!exercise?.id) return;
+
+    const updatedSets = exercise.sets.filter((_, index) => index !== setIndex);
+    const updatedExercise = {
+      ...exercise,
+      sets: updatedSets,
+      updatedAt: new Date()
+    };
+
+    await db.workoutExercises.update(exercise.id, updatedExercise);
+
+    setWorkoutExercises(exercises =>
+      exercises.map(e =>
+        e.exerciseId === exerciseId ? updatedExercise : e
+      )
+    );
+  };
+
   const value = React.useMemo(() => ({
     currentWorkout,
     workoutExercises,
@@ -201,7 +222,8 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
     abandonWorkout,
     updateExercise,
     addSet,
-    updateSet
+    updateSet,
+    deleteSet
   }), [currentWorkout, workoutExercises]);
 
   return (
