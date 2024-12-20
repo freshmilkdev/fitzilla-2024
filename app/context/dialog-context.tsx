@@ -12,17 +12,19 @@ interface DialogContextType {
 
 const DialogContext = React.createContext<DialogContextType | null>(null);
 
-export function DialogProvider({ children }: { children: React.ReactNode }) {
+export function DialogProvider({ children, actionText }: { children: React.ReactNode, actionText?: string }) {
   const [dialogState, setDialogState] = React.useState<{
     isOpen: boolean;
     title: string;
     description: string;
     onConfirm: (() => Promise<void> | void) | null;
+    actionText?: string;
   }>({
     isOpen: false,
     title: "",
     description: "",
     onConfirm: null,
+    actionText: 'Delete',
   });
 
   const showConfirmDialog: DialogContextType["showConfirmDialog"] = (options) => {
@@ -40,6 +42,7 @@ export function DialogProvider({ children }: { children: React.ReactNode }) {
     <DialogContext.Provider value={{ showConfirmDialog, hideConfirmDialog }}>
       {children}
       <ConfirmDialog
+        actionText={actionText}
         open={dialogState.isOpen}
         onOpenChange={(open) => !open && hideConfirmDialog()}
         title={dialogState.title}

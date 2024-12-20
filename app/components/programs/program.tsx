@@ -26,7 +26,7 @@ export default function Program({
     const { setSelectedExercises } = useSelectedExercises();
     const { showConfirmDialog } = useDialog();
     const navigate = useNavigate();
-    const { startWorkout } = useWorkout();
+    const { startWorkout, abandonWorkout, currentWorkout } = useWorkout();
     const program = useLiveQuery(
         async () => {
             if (!id) return null;
@@ -95,6 +95,24 @@ export default function Program({
         });
     };
 
+    const handleStartWorkout = () => {
+        if (currentWorkout) {
+            showConfirmDialog({
+                title: "Active Workout Exists",
+                description: "You already have an active workout. Would you like to abandon it and start a new one?",
+                onConfirm: async () => {
+                    await abandonWorkout();
+                    await startWorkout(program?.id as number);
+                    navigate(routePaths.workout);
+                },
+            });
+            return;
+        }
+
+        startWorkout(program?.id as number);
+        navigate(routePaths.workout);
+    };
+
     if (!program) {
         return <div>Loading program...</div>;
     }
@@ -150,13 +168,10 @@ export default function Program({
                 <div className="p-4">
                     <Button
                         className="w-full"
-                        onClick={() => {
-                            startWorkout(program.id as number);
-                            navigate(routePaths.workout);
-                        }}
+                        onClick={handleStartWorkout}
                     >
                         <Plus className="mr-2 h-4 w-4" />
-                        Start Workout
+                        {currentWorkout ? 'Switch to This Workout' : 'Start Workout'}
                     </Button>
                 </div>
             </div>

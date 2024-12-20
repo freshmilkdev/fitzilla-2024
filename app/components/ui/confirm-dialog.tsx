@@ -15,6 +15,7 @@ interface ConfirmDialogProps {
   title: string
   description: string
   onConfirm: () => void
+  actionText?: string
 }
 
 export function ConfirmDialog({ 
@@ -22,7 +23,8 @@ export function ConfirmDialog({
   onOpenChange, 
   title, 
   description, 
-  onConfirm 
+  onConfirm,
+  actionText = 'Delete'
 }: ConfirmDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -33,7 +35,7 @@ export function ConfirmDialog({
         </DialogHeader>
         <DialogFooter className="flex flex-row justify-center gap-4">
           <DialogClose>Cancel</DialogClose>
-          <Button onClick={onConfirm} variant="destructive">Delete</Button>
+          <Button onClick={onConfirm} variant="destructive">{actionText}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
