@@ -24,7 +24,7 @@ interface WorkoutSetTableProps {
 }
 
 export default function WorkoutSetTable({ exerciseId, sets, isBodyweight }: WorkoutSetTableProps) {
-  const { updateSet } = useWorkout();
+  const { updateSet, addSet } = useWorkout();
   const { setIsOpen, setExerciseId, setIsBodyweight, setSet, setSetIndex } = useWorkoutSetSheet();
 
   return (
@@ -48,8 +48,12 @@ export default function WorkoutSetTable({ exerciseId, sets, isBodyweight }: Work
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem onClick={() => {
-                  const newSet = { ...set };
-                  updateSet(exerciseId, sets.length, newSet);
+                  const newSet: WorkoutSet = {
+                    weight: set.weight,
+                    reps: set.reps,
+                    notes: set.notes
+                  };
+                  addSet(exerciseId, newSet);
                 }}>
                   <Copy />
                   <span>Copy</span>
