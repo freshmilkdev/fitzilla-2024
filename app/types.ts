@@ -86,6 +86,7 @@ export interface WorkoutExercise {
   workoutId: number;
   exerciseId: number;
   exerciseName: string;
+  isBodyweight: boolean;
   order: number;
   sets: WorkoutSet[];
   createdAt: Date;

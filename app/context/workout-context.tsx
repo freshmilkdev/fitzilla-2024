@@ -10,7 +10,7 @@ interface WorkoutContextType {
   completeWorkout: () => Promise<void>;
   abandonWorkout: () => Promise<void>;
   updateExercise: (exerciseId: number, updates: Partial<WorkoutExercise>) => Promise<void>;
-  addSet: (exerciseId: number) => Promise<void>;
+  addSet: (exerciseId: number, setData: WorkoutSet) => Promise<void>;
   updateSet: (exerciseId: number, setIndex: number, updates: Partial<WorkoutSet>) => Promise<void>;
 }
 
@@ -97,6 +97,7 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
             workoutId: workoutId as number,
             exerciseId: pe.exerciseId,
             exerciseName: exercise!.name,
+            isBodyweight: exercise!.isBodyweight,
             order: index,
             sets: [],
             createdAt: new Date(),
@@ -150,18 +151,13 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const addSet = async (exerciseId: number) => {
+  const addSet = async (exerciseId: number, setData: WorkoutSet) => {
     const exercise = workoutExercises.find(e => e.exerciseId === exerciseId);
     if (!exercise?.id) return;
 
-    const newSet: WorkoutSet = {
-      reps: 0,
-      notes: ''
-    };
-
     const updatedExercise = {
       ...exercise,
-      sets: [...exercise.sets, newSet],
+      sets: [...exercise.sets, setData],
       updatedAt: new Date()
     };
 

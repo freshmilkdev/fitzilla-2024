@@ -4,9 +4,11 @@ import {Sheet, SheetTrigger} from "~/components/ui/sheet";
 import {WorkoutSetForm} from "~/components/workout/workout-set-form";
 import WorkoutSetTable from "~/components/workout/workout-set-table";
 import {useWorkout} from "~/context/workout-context";
+import {useState} from "react";
 
 export default function WorkoutExercise({id}: { id: string }) {
   const {workoutExercises} = useWorkout();
+  const [open, setOpen] = useState(false);
   const exercise = workoutExercises.find(e => e.exerciseId === Number(id));
 
   if (!exercise) {
@@ -21,13 +23,17 @@ export default function WorkoutExercise({id}: { id: string }) {
       ) : (
         <p className='text-muted-foreground'>Start by adding a set</p>
       )}
-      <Sheet>
+      <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <Button className={'w-full'}>
             <Plus/> ADD SET
           </Button>
         </SheetTrigger>
-        <WorkoutSetForm exerciseId={exercise.exerciseId} />
+        <WorkoutSetForm 
+          exerciseId={exercise.exerciseId} 
+          isBodyweight={exercise.isBodyweight} 
+          onOpenChange={setOpen}
+        />
       </Sheet>
     </div>)
 }
