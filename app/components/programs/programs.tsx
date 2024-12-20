@@ -6,9 +6,15 @@ import { ProgramSheetProvider, useProgramSheet } from "../../context/program-she
 import { Sheet, SheetTrigger } from "../ui/sheet";
 import { ProgramForm } from "./program-form";
 import { DialogProvider } from "~/context/dialog-context";
+import { Fab } from "../ui/fab";
 
 function ProgramsContent() {
   const { isOpen, setIsOpen, setProgram } = useProgramSheet();
+
+  const handleAddProgram = () => {
+    setProgram(null);
+    setIsOpen(true);
+  };
 
   return (
     <>
@@ -16,14 +22,7 @@ function ProgramsContent() {
       <div className="container pb-20">
         <ProgramList />
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild>
-            <Button
-              className={'fixed mx-auto left-1/2 transform -translate-x-1/2 bottom-20 rounded-full h-14 w-14'}
-              onClick={() => setProgram(null)}
-            >
-              <Plus className={'!w-8 !h-8'} />
-            </Button>
-          </SheetTrigger>
+          <Fab onClick={handleAddProgram} />
           <ProgramForm />
         </Sheet>
       </div>

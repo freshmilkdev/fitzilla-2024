@@ -119,7 +119,7 @@ export default function Program({
         return <div>Loading program...</div>;
     }
 
-    //todo: toggle edit program name and description and exercises
+    //todo: handle switch workout button and route to workout
 
 
     return (
