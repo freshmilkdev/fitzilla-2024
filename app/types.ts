@@ -98,4 +98,7 @@ export interface Workout {
   status: WorkoutStatus;
   startedAt: Date;
   updatedAt: Date;
+  // UI-only fields
+  workoutName?: string;
+  workoutDescription?: string;
 }

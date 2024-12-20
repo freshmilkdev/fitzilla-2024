@@ -13,23 +13,18 @@ import * as React from "react";
 import {WorkoutSetForm} from "~/components/workout/workout-set-form";
 import WorkoutDeleteSetDialog from "~/components/workout/workout-delete-set-dialog";
 import {Dialog, DialogTrigger} from "~/components/ui/dialog";
+import {useWorkout} from "~/context/workout-context";
+import type {WorkoutSet} from "~/types";
 
-interface WorkoutSet {
-  weight: number;
-  reps: number;
-  notes: string;
+interface WorkoutSetTableProps {
+  exerciseId: number;
+  sets: WorkoutSet[];
 }
 
-const workoutSets: WorkoutSet[] = [
-  {weight: 100, reps: 8, notes: 'Good form'},
-  {weight: 110, reps: 6, notes: 'Struggled on last rep'},
-  {weight: 105, reps: 10, notes: 'Felt strong'},
-];
+export default function WorkoutSetTable({exerciseId, sets}: WorkoutSetTableProps) {
+  const {updateSet} = useWorkout();
 
-
-export default function WorkoutSetTable() {
   return (
-
     <Sheet>
       <Table>
         <TableHeader>
@@ -42,7 +37,7 @@ export default function WorkoutSetTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {workoutSets.map((set, index) => (
+          {sets.map((set, index) => (
             <TableRow key={index}>
               <TableCell className="font-medium">{index + 1}</TableCell>
               <TableCell>{set.weight}</TableCell>
@@ -52,12 +47,15 @@ export default function WorkoutSetTable() {
                 <Dialog>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant='ghost' className='' size={'icon'}>
+                      <Button variant='ghost' size={'icon'}>
                         <Ellipsis/>
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => {
+                        const newSet = {...set};
+                        updateSet(exerciseId, sets.length, newSet);
+                      }}>
                         <Copy/>
                         <span>Copy</span>
                       </DropdownMenuItem>
@@ -69,26 +67,22 @@ export default function WorkoutSetTable() {
                         </DropdownMenuItem>
                       </SheetTrigger>
                       <DropdownMenuSeparator/>
-
                       <DialogTrigger asChild>
                         <DropdownMenuItem>
                           <Trash2/>
                           <span>Delete</span>
                         </DropdownMenuItem>
                       </DialogTrigger>
-
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  <WorkoutDeleteSetDialog/>
+                  <WorkoutDeleteSetDialog exerciseId={exerciseId} setIndex={index}/>
                 </Dialog>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <WorkoutSetForm/>
+      <WorkoutSetForm exerciseId={exerciseId}/>
     </Sheet>
-
-
   )
 }

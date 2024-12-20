@@ -17,6 +17,8 @@ import { useDialog } from "../../context/dialog-context";
 import { NavLink, useNavigate } from "react-router";
 import { routePaths } from "~/routes";
 import { useWorkout } from "~/context/workout-context";
+import { ContentHeader } from "../layout/content-header";
+
 export default function Program({
     id,
 }: {
@@ -123,15 +125,11 @@ export default function Program({
     return (
         <>
             <AppHeader title={'Programs'} variant='subpage' />
-            <div className="container py-4">
-                <div className="px-4 py-3 flex justify-between items-center">
-                    <div className="">
-                        <h2 className="text-lg font-medium">{program.name}</h2>
-                        <div className="text-muted-foreground text-sm">
-                            {program.description}
-                        </div>
-
-                    </div>
+            <div className="container pb-4">
+                <ContentHeader 
+                    title={program.name ?? ''} 
+                    description={program.description}
+                >
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button className="rounded-full" variant='ghost' size='icon'>
@@ -154,7 +152,7 @@ export default function Program({
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                </div>
+                </ContentHeader>
                 <Separator />
 
                 <ul>

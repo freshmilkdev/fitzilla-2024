@@ -18,11 +18,11 @@ interface ConfirmDialogProps {
   actionText?: string
 }
 
-export function ConfirmDialog({ 
-  open, 
-  onOpenChange, 
-  title, 
-  description, 
+export function ConfirmDialog({
+  open,
+  onOpenChange,
+  title,
+  description,
   onConfirm,
   actionText = 'Delete'
 }: ConfirmDialogProps) {

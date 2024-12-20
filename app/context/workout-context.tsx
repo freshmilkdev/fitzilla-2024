@@ -29,7 +29,22 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
         .first();
 
       if (workout) {
-        setCurrentWorkout(workout);
+        let programName = 'Custom Workout';
+        let programDescription;
+
+        if (workout.programId) {
+          const program = await db.programs.get(workout.programId);
+          if (program) {
+            programName = program.name;
+            programDescription = program.description;
+          }
+        }
+
+        setCurrentWorkout({ 
+          ...workout, 
+          workoutName: programName,
+          workoutDescription: programDescription 
+        });
         const exercises = await db.workoutExercises
           .where('workoutId')
           .equals(workout.id!)
@@ -42,6 +57,17 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const startWorkout = async (programId?: number) => {
+    let programName = 'Custom Workout';
+    let programDescription;
+
+    if (programId) {
+      const program = await db.programs.get(programId);
+      if (program) {
+        programName = program.name;
+        programDescription = program.description;
+      }
+    }
+
     const workout: Workout = {
       programId,
       status: WORKOUT_STATUS.ACTIVE,
@@ -50,6 +76,12 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
     };
 
     const workoutId = await db.workouts.add(workout);
+    setCurrentWorkout({ 
+      ...workout, 
+      id: workoutId,
+      workoutName: programName ?? 'Custom Workout',
+      workoutDescription: programDescription ?? ''
+    });
     
     // If starting from a program, initialize with program exercises
     if (programId) {
@@ -66,7 +98,7 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
             exerciseId: pe.exerciseId,
             exerciseName: exercise!.name,
             order: index,
-            sets: [{ reps: 0, notes: '' }],
+            sets: [],
             createdAt: new Date(),
             updatedAt: new Date()
           } as WorkoutExercise;
@@ -76,8 +108,6 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
       await db.workoutExercises.bulkAdd(exercises);
       setWorkoutExercises(exercises);
     }
-
-    setCurrentWorkout({ ...workout, id: workoutId });
   };
 
   const completeWorkout = async () => {
