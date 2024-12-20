@@ -6,15 +6,28 @@ import WorkoutSetTable from "~/components/workout/workout-set-table";
 import { useWorkout } from "~/context/workout-context";
 import { useState } from "react";
 import { AppHeader } from "../layout/app-header";
+import { WorkoutSetSheetContent } from "~/components/workout/workout-set-form";
+import { useWorkoutSetSheet } from "~/context/workout-set-sheet-context";
+import { WorkoutSetSheetProvider } from "~/context/workout-set-sheet-context";
+import { DialogProvider } from "~/context/dialog-context";
 
-export default function WorkoutExercise({ id }: { id: string }) {
+export function WorkoutExerciseContent({ id }: { id: string }) {
   const { workoutExercises } = useWorkout();
-  const [open, setOpen] = useState(false);
+  const { isOpen, setIsOpen, setExerciseId, setIsBodyweight, setSet, setSetIndex } = useWorkoutSetSheet();
+
   const exercise = workoutExercises.find(e => e.exerciseId === parseInt(id));
 
   if (!exercise) {
     return <div>Exercise not found</div>;
   }
+
+  const handleAddSet = () => {
+    setExerciseId(exercise.exerciseId);
+    setIsBodyweight(exercise.isBodyweight);
+    setSet(null);
+    setSetIndex(undefined);
+    setIsOpen(true);
+  };
 
   return (
     <div>
@@ -27,20 +40,24 @@ export default function WorkoutExercise({ id }: { id: string }) {
           ) : (
             <p className='text-muted-foreground'>Start by adding a set</p>
           )}
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild>
-              <Button className={'w-full'}>
-                <Plus /> ADD SET
-              </Button>
-            </SheetTrigger>
-            <WorkoutSetForm
-              exerciseId={exercise.exerciseId}
-              isBodyweight={exercise.isBodyweight}
-              onOpenChange={setOpen}
-            />
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <Button onClick={handleAddSet} className="w-full">
+              <Plus /> ADD SET
+            </Button>
+            <WorkoutSetSheetContent />
           </Sheet>
         </div>
       </div>
     </div>
-  )
+  );
+}
+
+export default function WorkoutExercise({ id }: { id: string }) {
+  return (
+    <WorkoutSetSheetProvider>
+      <DialogProvider>
+        <WorkoutExerciseContent id={id} />
+      </DialogProvider>
+    </WorkoutSetSheetProvider>
+  );
 }

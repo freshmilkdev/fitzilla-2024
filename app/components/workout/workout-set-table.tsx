@@ -1,4 +1,4 @@
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "~/components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from "~/components/ui/table"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,15 +6,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "~/components/ui/dropdown-menu";
-import {Button} from "~/components/ui/button";
-import {Copy, Edit, Ellipsis, Trash2} from "lucide-react";
-import {Sheet, SheetTrigger} from "~/components/ui/sheet";
+import { Button } from "~/components/ui/button";
+import { Copy, Edit, Ellipsis, Trash2 } from "lucide-react";
+import { Sheet, SheetTrigger } from "~/components/ui/sheet";
 import * as React from "react";
-import {WorkoutSetForm} from "~/components/workout/workout-set-form";
+import { WorkoutSetForm } from "~/components/workout/workout-set-form";
 import WorkoutDeleteSetDialog from "~/components/workout/workout-delete-set-dialog";
-import {Dialog, DialogTrigger} from "~/components/ui/dialog";
-import {useWorkout} from "~/context/workout-context";
-import type {WorkoutSet} from "~/types";
+import { Dialog, DialogTrigger } from "~/components/ui/dialog";
+import { useWorkout } from "~/context/workout-context";
+import type { WorkoutSet } from "~/types";
+import { useWorkoutSetSheet } from "~/context/workout-set-sheet-context";
 
 interface WorkoutSetTableProps {
   exerciseId: number;
@@ -22,8 +23,9 @@ interface WorkoutSetTableProps {
   isBodyweight: boolean;
 }
 
-export default function WorkoutSetTable({exerciseId, sets, isBodyweight}: WorkoutSetTableProps) {
-  const {updateSet} = useWorkout();
+export default function WorkoutSetTable({ exerciseId, sets, isBodyweight }: WorkoutSetTableProps) {
+  const { updateSet } = useWorkout();
+  const { setIsOpen, setExerciseId, setIsBodyweight, setSet, setSetIndex } = useWorkoutSetSheet();
 
   return (
     <div className="divide-y">
@@ -36,42 +38,48 @@ export default function WorkoutSetTable({exerciseId, sets, isBodyweight}: Workou
                 {set.reps} reps {!isBodyweight && set.weight && `× ${set.weight}kg`}
               </span>
             </div>
-            
-            <Dialog>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <Ellipsis className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => {
-                    const newSet = {...set};
-                    updateSet(exerciseId, sets.length, newSet);
-                  }}>
-                    <Copy/>
-                    <span>Copy</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator/>
-                  <SheetTrigger asChild>
-                    <DropdownMenuItem>
-                      <Edit/>
-                      <span>Edit</span>
-                    </DropdownMenuItem>
-                  </SheetTrigger>
-                  <DropdownMenuSeparator/>
-                  <DialogTrigger asChild>
-                    <DropdownMenuItem>
-                      <Trash2/>
-                      <span>Delete</span>
-                    </DropdownMenuItem>
-                  </DialogTrigger>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <WorkoutDeleteSetDialog exerciseId={exerciseId} setIndex={index}/>
-            </Dialog>
+
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Ellipsis className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem onClick={() => {
+                  const newSet = { ...set };
+                  updateSet(exerciseId, sets.length, newSet);
+                }}>
+                  <Copy />
+                  <span>Copy</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem onClick={() => {
+                  setExerciseId(exerciseId);
+                  setIsBodyweight(isBodyweight);
+                  setSet(set);
+                  setSetIndex(index);
+                  setIsOpen(true);
+                }}>
+                  <Edit />
+                  <span>Edit</span>
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem>
+                  <Trash2 />
+                  <span>Delete</span>
+                </DropdownMenuItem>
+
+              </DropdownMenuContent>
+            </DropdownMenu>
+            {/* <WorkoutDeleteSetDialog exerciseId={exerciseId} setIndex={index}/> */}
+
           </div>
-          
+
           {set.notes && (
             <div className="pl-10 pt-0.5 text-sm text-muted-foreground">
               "{set.notes}"
