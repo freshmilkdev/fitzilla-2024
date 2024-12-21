@@ -3,20 +3,38 @@ import type { MuscleGroupWithExercises, Exercise } from "~/types";
 import { ExerciseListItem } from "~/components/exercises/exercise-list-item";
 import { Badge } from "~/components/ui/badge";
 import { cn } from "~/lib/utils";
+import { useSelectedExercises } from "~/context/selected-exercises-context";
+import { useMemo } from "react";
 
 interface MuscleGroupListItemProps extends MuscleGroupWithExercises {
   variant?: 'plain' | 'withCheckbox' | 'withOptions';
 }
 
-export default function MuscleGroupListItem({ name, exercises, variant = 'withOptions' }: MuscleGroupListItemProps) {
- 
+const SelectedExercisesBadge = ({ exercises }: { exercises: Exercise[] }) => {
+  const { selectedExercises, toggleExercise } = useSelectedExercises();
+
+  const countSelectedExercises = useMemo(() => {
+    return exercises.filter(exercise => selectedExercises.has(exercise.id)).length;
+  }, [exercises, selectedExercises]);
 
   return (
-    <AccordionItem value={name}  className={cn(variant !== 'plain' && "px-4")}>
+    !countSelectedExercises ? null :
+      <Badge variant="secondary" className="h-6 items-center justify-center font-normal">
+        Selected: {countSelectedExercises}
+      </Badge>
+  )
+};
+
+export default function MuscleGroupListItem({ name, exercises, variant = 'withOptions' }: MuscleGroupListItemProps) {
+
+  return (
+    <AccordionItem value={name} className={cn(variant !== 'plain' && "px-4")}>
       <AccordionTrigger className={'text-lg font-medium hover:no-underline py-3'}>
         <div className='flex grow justify-between pr-2'>
           <span>{name}</span>
-          <Badge className="h-6 w-6 items-center justify-center font-normal">{exercises.length}</Badge>
+          {variant === 'withCheckbox' ?
+            <SelectedExercisesBadge exercises={exercises} /> :
+            <Badge className="h-6 w-6 items-center justify-center font-normal">{exercises.length}</Badge>}
         </div>
       </AccordionTrigger>
       <AccordionContent className='pt-0 pb-2'>
