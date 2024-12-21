@@ -42,7 +42,8 @@ export default function Program({
 
             const programWithExercises = {
                 ...(await db.programs.get(Number(id))),
-                exercises: programExercises.map((pExercise) => exercises.find(ex => ex.id === pExercise.exerciseId))
+                exercises: programExercises.map((pExercise) =>
+                    exercises.find(ex => ex.id === pExercise.exerciseId)) as Exercise[]
             };
             return programWithExercises;
 
