@@ -5,7 +5,7 @@ import { PageHeader } from "../layout/page-header";
 import { Separator } from "../ui/separator";
 import type { Exercise, Program } from "~/types";
 import { Button } from "../ui/button";
-import { Pencil, Plus, History, Edit, Trash2, Ellipsis } from "lucide-react";
+import { Pencil, Plus, History, Edit, Trash2, Ellipsis, SquareArrowOutUpRight, CirclePlay } from "lucide-react";
 import type { Route } from "../../routes/+types/program";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "../ui/dropdown-menu";
 import { AppHeader } from "../layout/app-header";
@@ -29,6 +29,7 @@ export default function Program({
     const { showConfirmDialog } = useDialog();
     const navigate = useNavigate();
     const { startWorkout, abandonWorkout, currentWorkout } = useWorkout();
+
     const program = useLiveQuery(
         async () => {
             if (!id) return null;
@@ -53,6 +54,8 @@ export default function Program({
         [id]
     );
 
+
+    const isCurrentWorkout = currentWorkout?.programId === program?.id;
     const handleEdit = () => {
         if (!program) return;
 
@@ -99,6 +102,10 @@ export default function Program({
 
     const handleStartWorkout = () => {
         if (currentWorkout) {
+            if (isCurrentWorkout) {
+                navigate(routePaths.workout);
+                return;
+            }
             showConfirmDialog({
                 title: "Active Workout Exists",
                 description: "You already have an active workout. Would you like to abandon it and start a new one?",
@@ -118,8 +125,6 @@ export default function Program({
     if (!program) {
         return <div>Loading program...</div>;
     }
-
-    //todo: handle switch workout button and route to workout
 
 
     return (
@@ -168,8 +173,9 @@ export default function Program({
                         className="w-full"
                         onClick={handleStartWorkout}
                     >
-                        <Plus className="mr-2 h-4 w-4" />
-                        {currentWorkout ? 'Switch to This Workout' : 'Start Workout'}
+                        {isCurrentWorkout ? <SquareArrowOutUpRight className="mr-2 !h-5 !w-5" /> :
+                         <CirclePlay className="mr-2 !h-5 !w-5" />}
+                        {isCurrentWorkout ? 'Switch to this Workout' : 'Start Workout'}
                     </Button>
                 </div>
             </div>

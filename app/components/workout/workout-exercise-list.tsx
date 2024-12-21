@@ -26,9 +26,10 @@ export default function WorkoutExerciseList({ workoutExercises, currentWorkout }
             <span className='flex grow'>
               <span>{exercise.exerciseName}</span>
             </span>
-            <Badge variant='secondary' className="mr-2">
-              {exercise.sets.length}
-            </Badge>
+            {exercise.sets.length > 0 &&
+              <Badge variant='secondary' className="mr-2 font-normal w-[64px] justify-center text-center">
+                <span>Sets: {exercise.sets.length}</span>
+              </Badge>}
             <ChevronRight size={18} className="text-muted-foreground" />
           </NavLink>
           <Separator />

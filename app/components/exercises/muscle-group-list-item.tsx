@@ -10,6 +10,7 @@ interface MuscleGroupListItemProps extends MuscleGroupWithExercises {
   variant?: 'plain' | 'withCheckbox' | 'withOptions';
 }
 
+// TODO: muscle group icon
 const SelectedExercisesBadge = ({ exercises }: { exercises: Exercise[] }) => {
   const { selectedExercises, toggleExercise } = useSelectedExercises();
 
@@ -28,7 +29,7 @@ const SelectedExercisesBadge = ({ exercises }: { exercises: Exercise[] }) => {
 export default function MuscleGroupListItem({ name, exercises, variant = 'withOptions' }: MuscleGroupListItemProps) {
 
   return (
-    <AccordionItem value={name} className={cn(variant !== 'plain' && "px-4")}>
+    <AccordionItem value={name} className={cn(variant === 'withOptions' && "px-4")}>
       <AccordionTrigger className={'text-lg font-medium hover:no-underline py-3'}>
         <div className='flex grow justify-between pr-2'>
           <span>{name}</span>
