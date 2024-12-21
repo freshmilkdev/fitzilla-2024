@@ -20,8 +20,8 @@ export function Fab({ onClick, className = '' }: FabProps) {
     return (
         <Button
             className={cn(`fixed mx-auto left-1/2 transform -translate-x-1/2 rounded-full h-14 w-14`, 
+                currentWorkout ? 'bottom-32' : 'bottom-20',
                 className,
-                currentWorkout ? 'bottom-32' : 'bottom-20'
             )}
             onClick={handleClick}
         >

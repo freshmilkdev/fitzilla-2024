@@ -10,6 +10,7 @@ import { WorkoutSetSheetContent } from "~/components/workout/workout-set-form";
 import { useWorkoutSetSheet } from "~/context/workout-set-sheet-context";
 import { WorkoutSetSheetProvider } from "~/context/workout-set-sheet-context";
 import { DialogProvider } from "~/context/dialog-context";
+import { Fab } from "../ui/fab";
 
 export function WorkoutExerciseContent({ id }: { id: string }) {
   const { workoutExercises } = useWorkout();
@@ -41,9 +42,10 @@ export function WorkoutExerciseContent({ id }: { id: string }) {
             <p className='text-muted-foreground'>Start by adding a set</p>
           )}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <Button onClick={handleAddSet} className="w-full">
+            <Fab onClick={handleAddSet}/>
+            {/* <Button onClick={handleAddSet} className="w-full">
               <Plus /> ADD SET
-            </Button>
+            </Button> */}
             <WorkoutSetSheetContent />
           </Sheet>
         </div>
