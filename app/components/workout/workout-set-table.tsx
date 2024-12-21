@@ -17,6 +17,7 @@ import { useWorkout } from "~/context/workout-context";
 import type { WorkoutSet } from "~/types";
 import { useWorkoutSetSheet } from "~/context/workout-set-sheet-context";
 import { useDialog } from "~/context/dialog-context";
+import { useTheme } from "~/context/theme-context";
 
 interface WorkoutSetTableProps {
   exerciseId: number;
@@ -28,6 +29,7 @@ export default function WorkoutSetTable({ exerciseId, sets, isBodyweight }: Work
   const { updateSet, addSet, deleteSet } = useWorkout();
   const { showConfirmDialog } = useDialog();
   const { setIsOpen, setExerciseId, setIsBodyweight, setSet, setSetIndex } = useWorkoutSetSheet();
+  const { settings } = useTheme();
 
   const handleDelete = (index: number) => {
     showConfirmDialog({
@@ -51,7 +53,7 @@ export default function WorkoutSetTable({ exerciseId, sets, isBodyweight }: Work
             <div className="flex items-center gap-4">
               <span className="text-sm text-muted-foreground">#{index + 1}</span>
               <span>
-                {set.reps} reps {!isBodyweight && set.weight && `× ${set.weight}kg`}
+                {set.reps} reps {!isBodyweight && set.weight && `× ${set.weight}${settings?.measurementUnit }`}
               </span>
             </div>
 

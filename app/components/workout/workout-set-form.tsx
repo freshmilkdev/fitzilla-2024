@@ -10,6 +10,7 @@ import * as z from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { useEffect, useState } from "react";
 import { Check, Save } from "lucide-react";
+import { useTheme } from "~/context/theme-context";
 
 const setFormSchema = (isBodyweight: boolean) => z.object({
   weight: isBodyweight
@@ -28,7 +29,8 @@ const setFormSchema = (isBodyweight: boolean) => z.object({
   notes: z.string().optional()
 });
 
-export function WorkoutSetSheetContent() {
+export function WorkoutSetSheetContent() {  
+  const { settings } = useTheme();
   const { isOpen, setIsOpen, exerciseId, isBodyweight, set, setIndex } = useWorkoutSetSheet();
   const { addSet, updateSet } = useWorkout();
 
@@ -86,7 +88,7 @@ export function WorkoutSetSheetContent() {
                 name="weight"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Weight</FormLabel>
+                    <FormLabel>Weight ({settings?.measurementUnit})</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
