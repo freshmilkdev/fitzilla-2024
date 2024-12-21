@@ -1,7 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 import { Button } from "../ui/button";
 import { cn } from "~/lib/utils";
-import { ModeToggle } from "../ui/mode-toggle";
 
 interface AppHeaderProps {
   title: string;
@@ -11,7 +10,7 @@ interface AppHeaderProps {
 
 export function AppHeader({ title, variant = 'root', rightElement }: AppHeaderProps) {
   return (
-    <header className="px-4 sticky top-0 z-50 w-full border-b border-gray-200 bg-background/95 backdrop-blur">
+    <header className="px-2 sticky top-0 z-50 w-full border-b border-gray-200 bg-background/95 backdrop-blur">
       <div className="container flex h-14 items-center">
         <div className="flex flex-1 items-center gap-2">
           {variant === 'subpage' && (

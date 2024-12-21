@@ -10,7 +10,7 @@ import {
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
 import { WorkoutProvider } from "./context/workout-context";
-import { ThemeProvider } from "./components/theme-provider";
+import { ThemeProvider } from "./context/theme-context";
 
 export const links: Route.LinksFunction = () => [
   // { rel: "preconnect", href: "https://fonts.googleapis.com" },
