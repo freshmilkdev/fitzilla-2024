@@ -45,7 +45,7 @@ export function ProgramFormContent({ selectedExerciseIds }: { selectedExerciseId
             exercises: []
         }
     });
-
+    
     // Handle initialization for both new and edit cases
     useEffect(() => {
         if (program) {
@@ -72,7 +72,7 @@ export function ProgramFormContent({ selectedExerciseIds }: { selectedExerciseId
         const exercises = Array.from(selectedExercises);
         form.setValue("exercises", exercises);
         // Trigger validation immediately after setting value
-        if (form.formState.isSubmitted) {
+        if (form.formState.isSubmitted /* && !form.formState.isSubmitSuccessful */) {
             form.trigger("exercises");
         }
     }, [selectedExercises, form]);
@@ -108,6 +108,7 @@ export function ProgramFormContent({ selectedExerciseIds }: { selectedExerciseId
 
             await db.programExercises.bulkAdd(programExercises);
             form.reset();
+            
             setSelectedExercises([]);
             setIsOpen(false);
         } catch (error) {

@@ -17,7 +17,7 @@ export default function ProgramPage({
   return (
     <ProgramSheetProvider>
       <SelectedExercisesProvider>
-        <DialogProvider actionText="Start new workout">
+        <DialogProvider actionText="Confirm">
           <Program id={params.id ?? null} />
         </DialogProvider>
       </SelectedExercisesProvider>

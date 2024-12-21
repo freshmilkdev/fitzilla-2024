@@ -23,7 +23,8 @@ function ProgramsContent() {
         <ProgramList />
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <Fab onClick={handleAddProgram} />
-          <ProgramForm />
+          {/* ForceProgramForm to re-render when isOpen changes */}
+          {isOpen && <ProgramForm />}
         </Sheet>
       </div>
     </>
