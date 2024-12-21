@@ -127,11 +127,13 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
   const abandonWorkout = async () => {
     if (!currentWorkout?.id) return;
 
-    await db.workouts.update(currentWorkout.id, {
-      status: WORKOUT_STATUS.ABANDONED,
-      updatedAt: new Date()
-    });
+    // Delete related workout exercises
+    await db.workoutExercises.where('workoutId').equals(currentWorkout.id).delete();
 
+    // Delete the workout
+    await db.workouts.delete(currentWorkout.id);
+
+    // Clear the current workout and exercises from state
     setCurrentWorkout(null);
     setWorkoutExercises([]);
   };
