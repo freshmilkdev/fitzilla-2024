@@ -35,7 +35,7 @@ export function WorkoutExerciseContent({ id }: { id: string }) {
       <AppHeader title="Workout" variant="subpage" />
       <div className="container py-4">
         <div className='px-4 space-y-3'>
-          <h2 className='text-2xl font-semibold tracking-tight'>{exercise.exerciseName}</h2>
+          <h2 className='text-xl font-semibold tracking-tight'>{exercise.exerciseName}</h2>
           {exercise.sets.length > 0 ? (
             <WorkoutSetTable exerciseId={exercise.exerciseId} sets={exercise.sets} isBodyweight={exercise.isBodyweight} />
           ) : (

@@ -100,9 +100,9 @@ export default function WorkoutSetTable({ exerciseId, sets, isBodyweight }: Work
           </div>
 
           {set.notes && (
-            <div className="pl-10 pt-0.5 text-sm text-muted-foreground">
+            <blockquote className="pl-8 pr-10 break-words pt-0.5 text-sm text-muted-foreground">
               "{set.notes}"
-            </div>
+            </blockquote>
           )}
         </div>
       ))}
