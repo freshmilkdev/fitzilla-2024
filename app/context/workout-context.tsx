@@ -107,8 +107,11 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
         })
       );
 
-      await db.workoutExercises.bulkAdd(exercises);
-      setWorkoutExercises(exercises);
+      const workoutExercisesIds = await db.workoutExercises.bulkAdd(exercises, { allKeys: true });
+      setWorkoutExercises(exercises.map((exercise, index) => ({
+        ...exercise,
+        id: workoutExercisesIds[index]
+      })));
     }
   };
 
