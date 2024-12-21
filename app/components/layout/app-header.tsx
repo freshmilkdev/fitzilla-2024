@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { Button } from "../ui/button";
 import { cn } from "~/lib/utils";
+import { ModeToggle } from "../ui/mode-toggle";
 
 interface AppHeaderProps {
   title: string;
