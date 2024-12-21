@@ -6,10 +6,18 @@ import { Trash2, Check, Ban } from "lucide-react";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router";
 import { routePaths } from "~/routes";
+import { useEffect } from "react";
 
 export default function Workout() {
   const { workoutExercises, currentWorkout, abandonWorkout, completeWorkout } = useWorkout();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!currentWorkout) {
+      navigate(routePaths.history);
+    }
+  }, [currentWorkout, navigate]); // Add dependency array
+
   if (!currentWorkout) {
     return <div>No active workout.</div>;
   }

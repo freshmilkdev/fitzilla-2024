@@ -5,7 +5,7 @@ export const routePaths = {
   exercises: '/exercises',
   programs: '/programs',
   program: '/programs/:id',
-  history: 'history',
+  history: '/history',
   workout: '/workout',
   workoutExercise: '/workout/:exerciseId',
 }
