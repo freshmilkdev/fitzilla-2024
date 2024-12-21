@@ -42,7 +42,7 @@ export default function Program({
 
             const programWithExercises = {
                 ...(await db.programs.get(Number(id))),
-                exercises: exercises.filter((e): e is Exercise => e !== undefined)
+                exercises: programExercises.map((pExercise) => exercises.find(ex => ex.id === pExercise.exerciseId))
             };
             return programWithExercises;
 
