@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { useEffect, useState } from "react";
+import { Check, Save } from "lucide-react";
 
 const setFormSchema = (isBodyweight: boolean) => z.object({
   weight: isBodyweight
@@ -139,7 +140,10 @@ export function WorkoutSetSheetContent() {
             />
 
             <SheetFooter>
-              <Button type="submit">Save Set</Button>
+              <Button type="submit">
+                <Check />
+                Save
+                </Button>
             </SheetFooter>
           </form>
         </Form>

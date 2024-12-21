@@ -8,7 +8,7 @@ import { useState, useEffect } from "react"
 import { db } from "~/db"
 import { useGroupedExercises } from "~/hooks/use-grouped-exercises"
 import { MuscleGroupList } from "../exercises/muscle-group-list"
-import { Save } from "lucide-react"
+import { Check, Save } from "lucide-react"
 import { SelectedExercisesProvider, useSelectedExercises } from "../../context/selected-exercises-context"
 
 import { useForm } from "react-hook-form";
@@ -116,7 +116,7 @@ export function ProgramFormContent({ selectedExerciseIds }: { selectedExerciseId
     };
 
     return (
-        <SheetContent side={"top"} className="px-4">
+        <SheetContent side={"bottom"} className="px-4 overflow-y-auto h-[92vh] pb-20">
             <SheetHeader>
                 <SheetTitle>{program ? 'Edit program' : 'Add program'}</SheetTitle>
                 <SheetDescription>
@@ -176,8 +176,8 @@ export function ProgramFormContent({ selectedExerciseIds }: { selectedExerciseId
                     />
 
                     <SheetFooter>
-                        <Button type="submit">
-                            <Save className="mr-2" />
+                        <Button type="submit" className="fixed bottom-4 left-0 right-0 mx-4">
+                            <Check className="mr-2" />
                             Save
                         </Button>
                     </SheetFooter>

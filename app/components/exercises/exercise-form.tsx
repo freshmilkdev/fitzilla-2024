@@ -6,7 +6,7 @@ import { useExerciseSheet } from "../../context/exercise-sheet-context";
 import { SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from "../ui/sheet";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Save } from "lucide-react";
+import { Check, Save } from "lucide-react";
 import { db } from "~/db";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Switch } from "../ui/switch";
@@ -77,7 +77,7 @@ export function ExerciseForm() {
   };
 
   return (
-    <SheetContent side="top" className="px-4">
+    <SheetContent side={"bottom"} className="px-4 overflow-y-auto h-[92vh] pb-20">
       <SheetHeader>
         <SheetTitle>{exercise ? 'Edit exercise' : 'Add exercise'}</SheetTitle>
         <SheetDescription>
@@ -150,7 +150,7 @@ export function ExerciseForm() {
                 </div>
                 <FormControl>
                   <Switch
-                  className="!mt-0"
+                    className="!mt-0"
                     checked={field.value}
                     onCheckedChange={field.onChange}
                   />
@@ -160,8 +160,8 @@ export function ExerciseForm() {
           />
 
           <SheetFooter>
-            <Button type="submit">
-              <Save className="mr-2 h-4 w-4" />
+            <Button type="submit" className="fixed bottom-4 left-0 right-0 mx-4">
+              <Check className="mr-2" />
               Save
             </Button>
           </SheetFooter>
