@@ -9,7 +9,7 @@ import { routePaths } from "~/routes";
 import { useEffect } from "react";
 
 export default function Workout() {
-  const { workoutExercises, currentWorkout, abandonWorkout, completeWorkout } = useWorkout();
+  const { workoutExercises, currentWorkout, deleteWorkout, completeWorkout } = useWorkout();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function Workout() {
         <ContentHeader title={currentWorkout.workoutName} description={currentWorkout.workoutDescription} />
         <div className="px-2 py-4 flex space-x-4 justify-center items-center">
           <Button variant="destructive" onClick={() => {
-            abandonWorkout();
+            deleteWorkout();
             navigate(routePaths.history);
           }}
             className="flex-1">

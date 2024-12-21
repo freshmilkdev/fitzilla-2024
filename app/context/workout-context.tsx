@@ -8,7 +8,7 @@ interface WorkoutContextType {
   workoutExercises: WorkoutExercise[];
   startWorkout: (programId?: number) => Promise<void>;
   completeWorkout: () => Promise<void>;
-  abandonWorkout: () => Promise<void>;
+  deleteWorkout: () => Promise<void>;
   updateExercise: (exerciseId: number, updates: Partial<WorkoutExercise>) => Promise<void>;
   addSet: (exerciseId: number, setData: WorkoutSet) => Promise<void>;
   updateSet: (exerciseId: number, setIndex: number, updates: Partial<WorkoutSet>) => Promise<void>;
@@ -127,7 +127,7 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
     setWorkoutExercises([]);
   };
 
-  const abandonWorkout = async () => {
+  const deleteWorkout = async () => {
     if (!currentWorkout?.id) return;
 
     // Delete related workout exercises
@@ -144,7 +144,7 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
   const updateExercise = async (exerciseId: number, updates: Partial<WorkoutExercise>) => {
     const exercise = workoutExercises.find(e => e.exerciseId === exerciseId);
     if (!exercise?.id) return;
-
+    
     await db.workoutExercises.update(exercise.id, {
       ...updates,
       updatedAt: new Date()
@@ -224,7 +224,7 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
     workoutExercises,
     startWorkout,
     completeWorkout,
-    abandonWorkout,
+    deleteWorkout,
     updateExercise,
     addSet,
     updateSet,

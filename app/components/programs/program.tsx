@@ -28,7 +28,7 @@ export default function Program({
     const { setSelectedExercises } = useSelectedExercises();
     const { showConfirmDialog } = useDialog();
     const navigate = useNavigate();
-    const { startWorkout, abandonWorkout, currentWorkout } = useWorkout();
+    const { startWorkout, deleteWorkout, currentWorkout } = useWorkout();
 
     const program = useLiveQuery(
         async () => {
@@ -110,7 +110,7 @@ export default function Program({
                 title: "Active Workout Exists",
                 description: "You already have an active workout. Would you like to abandon it and start a new one?",
                 onConfirm: async () => {
-                    await abandonWorkout();
+                    await deleteWorkout();
                     await startWorkout(program?.id as number);
                     navigate(routePaths.workout);
                 },
