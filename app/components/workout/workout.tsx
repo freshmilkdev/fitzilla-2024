@@ -14,7 +14,7 @@ import type { ExtendedWorkoutExercise } from "~/types";
 export default function Workout() {
   const { workoutExercises, currentWorkout, deleteWorkout, completeWorkout } = useWorkout();
   const navigate = useNavigate();
-
+  
 // Fetch all exercises once
 const extendedWorkoutExercises = useLiveQuery(async () => {
   if (!currentWorkout) return [];
@@ -34,13 +34,8 @@ const extendedWorkoutExercises = useLiveQuery(async () => {
   );
 
   return workoutExercisesWithDetails;
-}, [currentWorkout]);
+}, [currentWorkout, workoutExercises]);
 
-  useEffect(() => {
-    if (!currentWorkout) {
-      navigate(routePaths.history);
-    }
-  }, [currentWorkout, navigate]);
 
   if (!currentWorkout) {
     return <div>No active workout.</div>;
