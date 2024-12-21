@@ -12,34 +12,41 @@ import { db } from "~/db";
 import type { ExtendedWorkoutExercise } from "~/types";
 
 export default function Workout() {
-  const { workoutExercises, currentWorkout, deleteWorkout, completeWorkout } = useWorkout();
+  const { workoutExercises, currentWorkout, deleteWorkout, completeWorkout, isLoaded } = useWorkout();
   const navigate = useNavigate();
-  
-// Fetch all exercises once
-const extendedWorkoutExercises = useLiveQuery(async () => {
-  if (!currentWorkout) return [];
 
-  // Fetch all exercises related to the current workout
-  const exercises = await db.exercises.toArray(); // Fetch all exercises at once
-  const workoutExercisesWithDetails = await Promise.all(
-    workoutExercises.map(async (exercise) => {
-      const exerciseDetails = exercises.find(e => e.id === exercise.exerciseId); // Find the exercise by ID
-      return {
-        ...exercise,
-        exerciseName: exerciseDetails?.name || '',
-        description: exerciseDetails?.description || '',
-        isBodyweight: exerciseDetails?.isBodyweight || false,
-      } as ExtendedWorkoutExercise;
-    })
-  );
+  // Fetch all exercises once
+  const extendedWorkoutExercises = useLiveQuery(async () => {
+    if (!currentWorkout) return [];
 
-  return workoutExercisesWithDetails;
-}, [currentWorkout, workoutExercises]);
+    // Fetch all exercises related to the current workout
+    const exercises = await db.exercises.toArray(); // Fetch all exercises at once
+    const workoutExercisesWithDetails = await Promise.all(
+      workoutExercises.map(async (exercise) => {
+        const exerciseDetails = exercises.find(e => e.id === exercise.exerciseId); // Find the exercise by ID
+        return {
+          ...exercise,
+          exerciseName: exerciseDetails?.name || '',
+          description: exerciseDetails?.description || '',
+          isBodyweight: exerciseDetails?.isBodyweight || false,
+        } as ExtendedWorkoutExercise;
+      })
+    );
 
+    return workoutExercisesWithDetails;
+  }, [currentWorkout, workoutExercises]);
+
+  useEffect(() => {
+    if (isLoaded && !currentWorkout) {
+      navigate(routePaths.history);
+    }
+  }, [isLoaded, currentWorkout, navigate]);
 
   if (!currentWorkout) {
     return <div>No active workout.</div>;
   }
+
+
 
   return (
     <div>

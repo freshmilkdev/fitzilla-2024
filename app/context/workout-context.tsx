@@ -6,6 +6,8 @@ import { WORKOUT_STATUS } from '~/types';
 interface WorkoutContextType {
   currentWorkout: Workout | null;
   workoutExercises: WorkoutExercise[];
+  isLoading: boolean;
+  isLoaded: boolean;
   startWorkout: (programId?: number) => Promise<void>;
   completeWorkout: () => Promise<void>;
   deleteWorkout: () => Promise<void>;
@@ -20,37 +22,48 @@ export const WorkoutContext = React.createContext<WorkoutContextType | undefined
 export function WorkoutProvider({ children }: { children: React.ReactNode }) {
   const [currentWorkout, setCurrentWorkout] = React.useState<Workout | null>(null);
   const [workoutExercises, setWorkoutExercises] = React.useState<WorkoutExercise[]>([]);
-
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoaded, setIsLoaded] = React.useState(false);
+  
   // Load active workout on mount
   React.useEffect(() => {
     const loadActiveWorkout = async () => {
-      const workout = await db.workouts
-        .where('status')
-        .equals(WORKOUT_STATUS.ACTIVE)
-        .first();
+      setIsLoading(true);
+      setIsLoaded(false);
+      try {
+        const workout = await db.workouts
+          .where('status')
+          .equals(WORKOUT_STATUS.ACTIVE)
+          .first();
 
-      if (workout) {
-        let programName = 'Custom Workout';
-        let programDescription;
+        if (workout) {
+          let programName = 'Custom Workout';
+          let programDescription;
 
-        if (workout.programId) {
-          const program = await db.programs.get(workout.programId);
-          if (program) {
-            programName = program.name;
-            programDescription = program.description;
+          if (workout.programId) {
+            const program = await db.programs.get(workout.programId);
+            if (program) {
+              programName = program.name;
+              programDescription = program.description;
+            }
           }
-        }
 
-        setCurrentWorkout({ 
-          ...workout, 
-          workoutName: programName,
-          workoutDescription: programDescription 
-        });
-        const exercises = await db.workoutExercises
-          .where('workoutId')
-          .equals(workout.id!)
-          .toArray();
-        setWorkoutExercises(exercises);
+          setCurrentWorkout({ 
+            ...workout, 
+            workoutName: programName,
+            workoutDescription: programDescription 
+          });
+          const exercises = await db.workoutExercises
+            .where('workoutId')
+            .equals(workout.id!)
+            .toArray();
+          setWorkoutExercises(exercises);
+        }
+        setIsLoaded(true);
+      } catch (error) {
+        console.error("Error loading active workout:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -220,6 +233,8 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
   const value = React.useMemo(() => ({
     currentWorkout,
     workoutExercises,
+    isLoading,
+    isLoaded,
     startWorkout,
     completeWorkout,
     deleteWorkout,
@@ -227,7 +242,7 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
     addSet,
     updateSet,
     deleteSet
-  }), [currentWorkout, workoutExercises]);
+  }), [currentWorkout, workoutExercises, isLoading, isLoaded]);
 
   return (
     <WorkoutContext.Provider value={value}>
