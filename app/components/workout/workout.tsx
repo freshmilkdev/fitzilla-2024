@@ -7,16 +7,40 @@ import { Button } from "../ui/button";
 import { useNavigate } from "react-router";
 import { routePaths } from "~/routes";
 import { useEffect } from "react";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "~/db";
+import type { ExtendedWorkoutExercise } from "~/types";
 
 export default function Workout() {
   const { workoutExercises, currentWorkout, deleteWorkout, completeWorkout } = useWorkout();
   const navigate = useNavigate();
 
+// Fetch all exercises once
+const extendedWorkoutExercises = useLiveQuery(async () => {
+  if (!currentWorkout) return [];
+
+  // Fetch all exercises related to the current workout
+  const exercises = await db.exercises.toArray(); // Fetch all exercises at once
+  const workoutExercisesWithDetails = await Promise.all(
+    workoutExercises.map(async (exercise) => {
+      const exerciseDetails = exercises.find(e => e.id === exercise.exerciseId); // Find the exercise by ID
+      return {
+        ...exercise,
+        exerciseName: exerciseDetails?.name || '',
+        description: exerciseDetails?.description || '',
+        isBodyweight: exerciseDetails?.isBodyweight || false,
+      } as ExtendedWorkoutExercise;
+    })
+  );
+
+  return workoutExercisesWithDetails;
+}, [currentWorkout]);
+
   useEffect(() => {
     if (!currentWorkout) {
       navigate(routePaths.history);
     }
-  }, [currentWorkout, navigate]); // Add dependency array
+  }, [currentWorkout, navigate]);
 
   if (!currentWorkout) {
     return <div>No active workout.</div>;
@@ -46,7 +70,7 @@ export default function Workout() {
           </Button>
         </div>
         <WorkoutExerciseList
-          workoutExercises={workoutExercises}
+          workoutExercises={extendedWorkoutExercises || []} // Pass the fetched exercises
           currentWorkout={currentWorkout}
         />
       </div>

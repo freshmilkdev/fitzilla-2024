@@ -40,10 +40,11 @@ export default function Program({
 
             const exercises = await Promise.all(
                 programExercises.map(pe =>
+                           //TODO: refactor this to fetch the alexercises once
                     db.exercises.get(pe.exerciseId)
                 )
             );
-
+     
             const programWithExercises = {
                 ...(await db.programs.get(Number(id))),
                 exercises: exercises.filter((e): e is Exercise => e !== undefined)
@@ -92,7 +93,7 @@ export default function Program({
                     await db.programs.delete(program.id as number);
 
                     // Navigate back to programs list
-                    window.history.back();
+                    navigate(routePaths.programs);
                 } catch (error) {
                     console.error("Error deleting program:", error);
                 }

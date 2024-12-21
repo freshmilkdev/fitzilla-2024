@@ -85,13 +85,19 @@ export interface WorkoutExercise {
   id?: number;
   workoutId: number;
   exerciseId: number;
-  exerciseName: string;
-  description?: string;
-  isBodyweight: boolean;
+  // exerciseName: string;
+  // description?: string;
+  // isBodyweight: boolean;
   order: number;
   sets: WorkoutSet[];
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface ExtendedWorkoutExercise extends WorkoutExercise {
+  exerciseName: string; // Additional field for UI
+  description?: string; // Additional field for UI
+  isBodyweight: boolean; // Additional field for UI
 }
 
 export interface Workout {

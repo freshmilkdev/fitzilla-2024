@@ -97,8 +97,6 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
           return {
             workoutId: workoutId as number,
             exerciseId: pe.exerciseId,
-            exerciseName: exercise!.name,
-            isBodyweight: exercise!.isBodyweight,
             order: index,
             sets: [],
             createdAt: new Date(),

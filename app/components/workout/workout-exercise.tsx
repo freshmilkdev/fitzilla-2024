@@ -11,20 +11,26 @@ import { useWorkoutSetSheet } from "~/context/workout-set-sheet-context";
 import { WorkoutSetSheetProvider } from "~/context/workout-set-sheet-context";
 import { DialogProvider } from "~/context/dialog-context";
 import { Fab } from "../ui/fab";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "~/db";
 
 export function WorkoutExerciseContent({ id }: { id: string }) {
   const { workoutExercises } = useWorkout();
-  const { isOpen, setIsOpen, setExerciseId, setIsBodyweight, setSet, setSetIndex } = useWorkoutSetSheet();
+  const { isOpen, setIsOpen, setExerciseId, setSet, setSetIndex } = useWorkoutSetSheet();
 
   const exercise = workoutExercises.find(e => e.exerciseId === parseInt(id));
+
+  const exerciseDetails = useLiveQuery(async () => {
+    if (!exercise) return null;
+    return db.exercises.get(exercise.exerciseId);
+  }, [exercise]);
 
   if (!exercise) {
     return <div>Exercise not found</div>;
   }
-
+  
   const handleAddSet = () => {
     setExerciseId(exercise.exerciseId);
-    setIsBodyweight(exercise.isBodyweight);
     setSet(null);
     setSetIndex(undefined);
     setIsOpen(true);
@@ -35,14 +41,17 @@ export function WorkoutExerciseContent({ id }: { id: string }) {
       <AppHeader title="Workout" variant="subpage" />
       <div className="container py-4">
         <div className='px-4 space-y-3'>
-          <h2 className='text-xl font-semibold tracking-tight'>{exercise.exerciseName}</h2>
+          <h2 className='text-xl font-semibold tracking-tight'>{exerciseDetails?.name}</h2>
           {exercise.sets.length > 0 ? (
-            <WorkoutSetTable exerciseId={exercise.exerciseId} sets={exercise.sets} isBodyweight={exercise.isBodyweight} />
+            <WorkoutSetTable
+              exerciseId={exercise.exerciseId}
+              sets={exercise.sets}
+              isBodyweight={exerciseDetails?.isBodyweight ?? false} />
           ) : (
             <p className='text-muted-foreground'>Start by adding a set</p>
           )}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <Fab onClick={handleAddSet} className="bottom-20"/>
+            <Fab onClick={handleAddSet} className="bottom-20" />
             <WorkoutSetSheetContent />
           </Sheet>
         </div>
