@@ -1,14 +1,14 @@
 import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
 import { Textarea } from "~/components/ui/textarea";
-import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "~/components/ui/sheet"
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "~/components/ui/sheet"
 import { useWorkout } from "~/context/workout-context";
 import { useWorkoutSetSheet } from "~/context/workout-set-sheet-context";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const setFormSchema = (isBodyweight: boolean) => z.object({
   weight: isBodyweight
@@ -39,6 +39,19 @@ export function WorkoutSetSheetContent() {
       notes: set?.notes ?? ""
     }
   });
+  useEffect(() => {
+    const defaultValues = {
+      reps: undefined,
+      weight: undefined,
+      notes: ""
+    };
+
+    const values = set 
+      ? { ...set, notes: set.notes || "" }
+      : defaultValues;
+
+    form.reset(values);
+  }, [set, form]);
 
   async function onSubmit(data: z.infer<ReturnType<typeof setFormSchema>>) {
     if (!exerciseId) return;
@@ -61,6 +74,7 @@ export function WorkoutSetSheetContent() {
       <SheetContent side="top">
         <SheetHeader>
           <SheetTitle>{set ? 'Edit set' : 'Add set'}</SheetTitle>
+          <SheetDescription>{set && setIndex !== undefined ? `Set ${setIndex + 1}` : 'Add a set to the exercise'}</SheetDescription>
         </SheetHeader>
 
         <Form {...form}>
@@ -78,7 +92,7 @@ export function WorkoutSetSheetContent() {
                         placeholder="Enter weight"
                         {...field}
                         value={field.value ?? ""}
-                        onChange={e => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                        onChange={e => field.onChange(Number(e.target.value))}
                       />
                     </FormControl>
                     <FormMessage />
@@ -98,8 +112,8 @@ export function WorkoutSetSheetContent() {
                       type="number"
                       placeholder="Enter reps"
                       {...field}
-                      value={field.value ?? ""}
-                      onChange={e => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                      value={field.value || ""}
+                      onChange={e => field.onChange(Number(e.target.value))}
                     />
                   </FormControl>
                   <FormMessage />
