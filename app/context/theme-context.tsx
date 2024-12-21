@@ -1,57 +1,77 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { db } from "~/db";
+import type { UserSettings } from "~/types";
 
 type Theme = "dark" | "light" | "system";
 
 type ThemeProviderProps = {
   children: React.ReactNode;
-  defaultTheme?: Theme;
-  storageKey?: string;
 };
 
 type ThemeProviderState = {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
+  settings: UserSettings | null;
+  loadSettings: () => Promise<void>;
+  updateSettings: (newSettings: Partial<UserSettings>) => Promise<void>;
 };
 
 const initialState: ThemeProviderState = {
-  theme: "system",
-  setTheme: () => null,
+  settings: null,
+  loadSettings: async () => {},
+  updateSettings: async () => {},
 };
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
-export function ThemeProvider({
-  children,
-  defaultTheme = "system",
-  storageKey = "vite-ui-theme",
-}: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
-  );
+export function ThemeProvider({ children }: ThemeProviderProps) {
+  const [settings, setSettings] = useState<UserSettings | null>(null);
+
+  const loadSettings = async () => {
+    const savedSettings = await db.settings.get(1);
+    setSettings(savedSettings || null);
+  };
+
+  const updateSettings = async (newSettings: Partial<UserSettings>) => {
+    if (settings) {
+      const updatedSettings = { ...settings, ...newSettings };
+      await db.settings.put({ id: 1, ...updatedSettings });
+      setSettings(updatedSettings);
+    } else {
+      const newSettingsEntry: UserSettings = {
+        theme: "system",
+        colorScheme: "#ffffff",
+        measurementUnit: "kg",
+        ...newSettings,
+      };
+      await db.settings.add(newSettingsEntry);
+      setSettings(newSettingsEntry);
+    }
+  };
 
   useEffect(() => {
-    const root = window.document.documentElement;
+    loadSettings();
+  }, []);
 
-    root.classList.remove("light", "dark");
+  useEffect(() => {
+    if (settings) {
+      const root = window.document.documentElement;
+      root.classList.remove("light", "dark");
 
-    if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
+      if (settings.theme === "system") {
+        const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light";
 
-      root.classList.add(systemTheme);
-      return;
+        root.classList.add(systemTheme);
+      } else {
+        root.classList.add(settings.theme);
+      }
     }
-
-    root.classList.add(theme);
-  }, [theme]);
+  }, [settings]);
 
   const value = {
-    theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
-      setTheme(theme);
-    },
+    settings,
+    loadSettings,
+    updateSettings,
   };
 
   return (
@@ -63,9 +83,8 @@ export function ThemeProvider({
 
 export const useTheme = () => {
   const context = useContext(ThemeProviderContext);
-
-  if (context === undefined)
+  if (context === undefined) {
     throw new Error("useTheme must be used within a ThemeProvider");
-
+  }
   return context;
 }; 

@@ -110,3 +110,10 @@ export interface Workout {
   workoutName?: string;
   workoutDescription?: string;
 }
+
+export interface UserSettings {
+  id?: number;
+  theme: "dark" | "light" | "system"; // Theme preference
+  colorScheme: string; // Custom color scheme if needed
+  measurementUnit: "kg" | "lbs"; // Measurement unit preference
+}

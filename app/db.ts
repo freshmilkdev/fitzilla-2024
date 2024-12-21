@@ -1,5 +1,5 @@
 import Dexie, { type EntityTable } from 'dexie';
-import type { MuscleGroup, Exercise, ProgramExercise, Program, WorkoutExercise, Workout } from '~/types';
+import type { MuscleGroup, Exercise, ProgramExercise, Program, WorkoutExercise, Workout, UserSettings } from '~/types';
 
 const db = new Dexie('WorkoutDatabase') as Dexie & {
   muscleGroups: EntityTable<MuscleGroup, 'id'>;
@@ -8,6 +8,7 @@ const db = new Dexie('WorkoutDatabase') as Dexie & {
   programExercises: EntityTable<ProgramExercise, 'id'>;
   workouts: EntityTable<Workout, 'id'>;
   workoutExercises: EntityTable<WorkoutExercise, 'id'>;
+  settings: EntityTable<UserSettings, 'id'>;
 };
 
 // Schema declaration
@@ -17,7 +18,8 @@ db.version(2).stores({
   programs: '++id, name, createdAt, updatedAt',
   programExercises: '++id, programId, exerciseId, order, createdAt, updatedAt',
   workouts: '++id, programId, status, startedAt, updatedAt',
-  workoutExercises: '++id, workoutId, exerciseId, order, createdAt, updatedAt'
+  workoutExercises: '++id, workoutId, exerciseId, order, createdAt, updatedAt',
+  settings: '++id, theme, colorScheme, measurementUnit'
 }).upgrade(tx => {
   // Handle any data migration if needed
 });
