@@ -42,10 +42,7 @@ export function WorkoutExerciseContent({ id }: { id: string }) {
             <p className='text-muted-foreground'>Start by adding a set</p>
           )}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <Fab onClick={handleAddSet}/>
-            {/* <Button onClick={handleAddSet} className="w-full">
-              <Plus /> ADD SET
-            </Button> */}
+            <Fab onClick={handleAddSet} className="bottom-20"/>
             <WorkoutSetSheetContent />
           </Sheet>
         </div>
