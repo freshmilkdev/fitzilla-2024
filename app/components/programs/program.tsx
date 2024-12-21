@@ -38,13 +38,8 @@ export default function Program({
                 .equals(Number(id))
                 .sortBy('order');
 
-            const exercises = await Promise.all(
-                programExercises.map(pe =>
-                           //TODO: refactor this to fetch the alexercises once
-                    db.exercises.get(pe.exerciseId)
-                )
-            );
-     
+            const exercises = await db.exercises.toArray(); // Fetch all exercises at once
+
             const programWithExercises = {
                 ...(await db.programs.get(Number(id))),
                 exercises: exercises.filter((e): e is Exercise => e !== undefined)
@@ -132,8 +127,8 @@ export default function Program({
         <>
             <AppHeader title={'Programs'} variant='subpage' />
             <div className="container pb-4">
-                <ContentHeader 
-                    title={program.name ?? ''} 
+                <ContentHeader
+                    title={program.name ?? ''}
                     description={program.description}
                 >
                     <DropdownMenu>
@@ -175,7 +170,7 @@ export default function Program({
                         onClick={handleStartWorkout}
                     >
                         {isCurrentWorkout ? <SquareArrowOutUpRight className="mr-2 !h-5 !w-5" /> :
-                         <CirclePlay className="mr-2 !h-5 !w-5" />}
+                            <CirclePlay className="mr-2 !h-5 !w-5" />}
                         {isCurrentWorkout ? 'Switch to this Workout' : 'Start Workout'}
                     </Button>
                 </div>
