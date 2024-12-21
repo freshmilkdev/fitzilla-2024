@@ -22,7 +22,7 @@ export function WorkoutBanner() {
         <div className="relative inline-flex rounded-full bg-green-500 h-3 w-3" />
       </div>
 
-      <span className="text-sm font-medium">Active Workout</span>
+      <span className="text-sm font-medium">Current Workout</span>
 
       <SquareArrowOutUpRight className="!w-5 !h-5 mr-1" />
 

@@ -107,3 +107,8 @@ body {
         @apply bg-background text-foreground;
     }
 }
+
+.svg-icon-container > * {
+    @apply w-full;
+    @apply h-full;
+  }

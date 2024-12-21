@@ -35,20 +35,38 @@ const initializeDatabase = async () => {
 
   const muscleGroups: Omit<MuscleGroup, 'id'>[] = [
     {
-      name: "Back",
-      description: "Muscles of the back including lats, traps, and rhomboids",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
       name: "Chest",
       description: "Pectoral muscles",
       createdAt: new Date(),
       updatedAt: new Date(),
     },
     {
+      name: "Back",
+      description: "Muscles of the back including lats, traps, and rhomboids",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
       name: "Legs",
-      description: "Lower body muscles including quadriceps, hamstrings, and calves",
+      description: "Lower body muscles including quadriceps, hamstrings, glutes, and calves",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      name: "Arms",
+      description: "Upper body muscles including biceps, triceps, and forearms",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      name: "Shoulders",
+      description: "Shoulder muscles",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      name: "Abs",
+      description: "Abdominal muscles",
       createdAt: new Date(),
       updatedAt: new Date(),
     },
@@ -63,28 +81,6 @@ const initializeDatabase = async () => {
     });
 
     const exercises: Omit<Exercise, 'id'>[] = [
-      // Back exercises
-      {
-        name: "Pull-ups",
-        muscleGroupId: muscleGroupIds[0],
-        isBodyweight: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        name: "Bent-over Rows",
-        muscleGroupId: muscleGroupIds[0],
-        isBodyweight: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        name: "Lat Pulldowns",
-        muscleGroupId: muscleGroupIds[0],
-        isBodyweight: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
       // Chest exercises
       {
         name: "Bench Press",
@@ -107,6 +103,28 @@ const initializeDatabase = async () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+      // Back exercises
+      {
+        name: "Pull-ups",
+        muscleGroupId: muscleGroupIds[0],
+        isBodyweight: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        name: "Bent-over Rows",
+        muscleGroupId: muscleGroupIds[0],
+        isBodyweight: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        name: "Lat Pulldowns",
+        muscleGroupId: muscleGroupIds[0],
+        isBodyweight: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
       // Legs exercises
       {
         name: "Squats",
@@ -116,7 +134,7 @@ const initializeDatabase = async () => {
         updatedAt: new Date(),
       },
       {
-        name: "Deadlifts",
+        name: "Leg Extensions",
         muscleGroupId: muscleGroupIds[2],
         isBodyweight: false,
         createdAt: new Date(),
@@ -129,8 +147,74 @@ const initializeDatabase = async () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+      // Arms exercises
+      {
+        name: "Bicep Curls",
+        muscleGroupId: muscleGroupIds[3],
+        isBodyweight: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        name: "Hammer Curls",
+        muscleGroupId: muscleGroupIds[3],
+        isBodyweight: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        name: "Tricep Dips",
+        muscleGroupId: muscleGroupIds[3],
+        isBodyweight: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      // Shoulders exercises
+      {
+        name: "Shoulder Press",
+        muscleGroupId: muscleGroupIds[4],
+        isBodyweight: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        name: "Dumbbell Lateral Raises",
+        muscleGroupId: muscleGroupIds[4],
+        isBodyweight: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        name: "Front Raises",
+        muscleGroupId: muscleGroupIds[4],
+        isBodyweight: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      // Abs exercises
+      {
+        name: "Plank",
+        muscleGroupId: muscleGroupIds[5],
+        isBodyweight: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        name: "Leg Raises",
+        muscleGroupId: muscleGroupIds[5],
+        isBodyweight: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        name: "Crunches",
+        muscleGroupId: muscleGroupIds[5],
+        isBodyweight: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
     ];
-    
+
     console.log("Seeding exercises...");
     await db.exercises.bulkAdd(exercises);
 
@@ -172,7 +256,7 @@ const initializeDatabase = async () => {
 
     console.log("Seeding program exercises...");
     await db.programExercises.bulkAdd(programExercises);
-    
+
     const finalCounts = await Promise.all([
       db.muscleGroups.count(),
       db.exercises.count(),
@@ -180,7 +264,7 @@ const initializeDatabase = async () => {
       db.programExercises.count()
     ]);
     console.log(`Final counts - Muscle Groups: ${finalCounts[0]}, Exercises: ${finalCounts[1]}`);
-    
+
   } catch (error) {
     console.error("Error seeding database:", error);
   }

@@ -18,6 +18,7 @@ export default [
     route(routePaths.workoutExercise, "./routes/workout-exercise.tsx"),
     route(routePaths.programs, "./routes/programs.tsx"),
     route(routePaths.program, "./routes/program.tsx"),
+    route(routePaths.history, "./routes/history.tsx"),
   ]),
 
 ] satisfies RouteConfig;
